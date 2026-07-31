@@ -22,7 +22,7 @@ interface Product {
   category: { name: string; slug: string }
 }
 
-const categoryInfo: Record<string, { label: string; icon: JSX.Element; color: string; gradient: string; bg: string; emoji: string }> = {
+const categoryInfo: Record<string, { label: string; icon: React.ReactNode; color: string; gradient: string; bg: string; emoji: string }> = {
   'my-pham': {
     label: 'Mỹ Phẩm',
     icon: <Sparkles className="inline-block" size={28} />,
