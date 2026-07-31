@@ -605,12 +605,13 @@ export default function AdminDashboard() {
                     Hủy
                   </button>
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: uploading ? 1 : 1.02 }}
+                    whileTap={{ scale: uploading ? 1 : 0.98 }}
                     type="submit"
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold shadow-lg"
+                    disabled={uploading}
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {editingProduct ? 'Cập Nhật' : 'Thêm Mới'}
+                    {uploading ? '⏳ Đang upload ảnh...' : editingProduct ? 'Cập Nhật' : 'Thêm Mới'}
                   </motion.button>
                 </div>
               </form>
