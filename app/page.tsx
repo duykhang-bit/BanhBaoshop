@@ -25,6 +25,12 @@ const categories = [
     emoji: '💻', description: 'Thiết bị hiện đại, công nghệ tiên tiến',
     Icon: Laptop,
   },
+  {
+    id: 4, name: 'Tôm Giống', slug: 'tom-giong',
+    color: 'from-orange-400 to-amber-400', lightBg: 'bg-orange-50',
+    emoji: '🦐', description: 'Tôm giống chất lượng cao, năng suất vượt trội',
+    Icon: Sparkles,
+  },
 ]
 
 const floatingEmojis = ['✨', '🌸', '💫', '🎀', '⭐', '🌺', '💝', '🎊']

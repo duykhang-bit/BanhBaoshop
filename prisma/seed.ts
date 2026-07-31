@@ -23,6 +23,7 @@ async function main() {
     { name: 'Mỹ Phẩm', slug: 'my-pham' },
     { name: 'Phân Bón', slug: 'phan-bon' },
     { name: 'Công Nghệ', slug: 'cong-nghe' },
+    { name: 'Tôm Giống', slug: 'tom-giong' },
   ]
 
   for (const cat of categories) {

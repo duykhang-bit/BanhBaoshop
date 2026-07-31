@@ -48,6 +48,14 @@ const categoryInfo: Record<string, { label: string; icon: React.ReactNode; color
     bg: 'bg-blue-50',
     emoji: '💻',
   },
+  'tom-giong': {
+    label: 'Tôm Giống',
+    icon: <span className="inline-block text-2xl">🦐</span>,
+    color: 'text-orange-600',
+    gradient: 'from-orange-400 to-amber-400',
+    bg: 'bg-orange-50',
+    emoji: '🦐',
+  },
 }
 
 export default function ProductsPage({ params }: { params: Promise<{ slug: string }> }) {
