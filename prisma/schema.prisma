@@ -1,0 +1,73 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  slug     String    @unique
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  image       String
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  stock       Int      @default(0)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  customerName    String
+  customerPhone   String
+  customerAddress String
+  note            String      @default("")
+  paymentMethod   String      // "cod" or "bank"
+  status          String      @default("pending") // pending, confirmed, shipping, completed, cancelled
+  totalAmount     Float
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  productName String
+  productImage String
+  price     Float
+  quantity  Int
+}
+
+model ShopConfig {
+  id                  String  @id @default("singleton")
+  shippingFee         Float   @default(30000)
+  freeShippingMin     Float   @default(300000)
+  shippingEnabled     Boolean @default(true)
+  showShippingHint    Boolean @default(true)
+  promoEnabled        Boolean @default(false)
+  promoCodes          String  @default("[]")
+}

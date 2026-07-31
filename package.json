@@ -1,0 +1,60 @@
+{
+  "name": "banhbaoshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duykhang-bit/BanhBaoshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duykhang-bit/BanhBaoshop/issues"
+  },
+  "homepage": "https://github.com/duykhang-bit/BanhBaoshop#readme",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "autoprefixer": "^10.5.4",
+    "bcryptjs": "^3.0.3",
+    "framer-motion": "^12.43.0",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.28.0",
+    "next": "^16.2.12",
+    "postcss": "^8.5.25",
+    "prisma": "^5.22.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^3.4.19",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "@prisma/client@5.22.0": true,
+    "@prisma/engines@5.22.0": true,
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "prisma@5.22.0": true,
+    "sharp@0.34.5": true
+  }
+}
