@@ -141,47 +141,14 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-              className="flex gap-8 justify-center mt-12 flex-wrap">
-              {[
-                { num: '500+', label: 'Sản phẩm' },
-                { num: '1000+', label: 'Khách hàng' },
-                { num: '4.9★', label: 'Đánh giá' },
-              ].map((stat, i) => (
-                <div key={i} className="text-center">
-                  <p className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">{stat.num}</p>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                </div>
-              ))}
-            </motion.div>
+
+
           </motion.div>
         </div>
       </section>
 
-      {/* Features banner */}
-      <section className="max-w-6xl mx-auto px-6 mb-10">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: Truck, label: 'Giao hàng nhanh', desc: 'Toàn quốc' },
-            { icon: Shield, label: 'Hàng chính hãng', desc: '100% cam kết' },
-            { icon: Star, label: 'Đánh giá 4.9★', desc: 'Từ khách hàng' },
-            { icon: Zap, label: 'Thanh toán dễ', desc: 'COD & CK' },
-          ].map((f, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              className="flex items-center gap-3 text-white">
-              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <f.icon size={20} />
-              </div>
-              <div>
-                <p className="font-semibold text-sm">{f.label}</p>
-                <p className="text-white/70 text-xs">{f.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+
+
 
       {/* Categories */}
       <section className="max-w-6xl mx-auto px-6 pb-16">
