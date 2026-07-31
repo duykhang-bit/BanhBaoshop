@@ -12,10 +12,9 @@ import { useShopConfig } from '@/lib/useShopConfig'
 import { useState } from 'react'
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, clearCart, getTotalPrice, getTotalItems } = useCartStore()
+  const { items, updateQuantity, removeItem, clearCart, getTotalPrice, getTotalItems, appliedPromo, setAppliedPromo } = useCartStore()
   const { config, calcShipping, applyPromo } = useShopConfig()
   const [promoInput, setPromoInput] = useState('')
-  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discount: number } | null>(null)
   const [promoError, setPromoError] = useState('')
 
   const totalPrice = getTotalPrice()

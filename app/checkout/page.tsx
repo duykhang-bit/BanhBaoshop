@@ -5,12 +5,14 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, CreditCard, Wallet, User, Phone, MapPin, FileText } from 'lucide-react'
+import { ArrowLeft, CreditCard, Wallet, User, Phone, MapPin, FileText, Tag } from 'lucide-react'
 import { useCartStore } from '@/lib/cartStore'
+import { useShopConfig } from '@/lib/useShopConfig'
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, getTotalPrice, clearCart } = useCartStore()
+  const { items, getTotalPrice, clearCart, appliedPromo } = useCartStore()
+  const { calcShipping } = useShopConfig()
   const [loading, setLoading] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [orderId, setOrderId] = useState('')
@@ -24,8 +26,9 @@ export default function CheckoutPage() {
   })
 
   const totalPrice = getTotalPrice()
-  const shippingFee = totalPrice >= 300000 ? 0 : 30000
-  const finalTotal = totalPrice + shippingFee
+  const shippingFee = calcShipping(totalPrice)
+  const discount = appliedPromo?.discount || 0
+  const finalTotal = totalPrice + shippingFee - discount
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,6 +42,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           ...formData,
           totalAmount: finalTotal,
+          discountCode: appliedPromo?.code || '',
+          discountAmount: discount,
           items: items.map(item => ({
             productId: item.id,
             productName: item.name,
@@ -64,6 +69,8 @@ export default function CheckoutPage() {
           clearCart()
           router.push('/')
         }
+      } else {
+        alert(data.error || 'Lỗi khi đặt hàng, thử lại sau')
       }
     } catch {
       alert('Lỗi khi đặt hàng, thử lại sau')
@@ -218,6 +225,15 @@ export default function CheckoutPage() {
                   {shippingFee === 0 ? 'Miễn phí' : `${shippingFee.toLocaleString()}₫`}
                 </span>
               </div>
+              {appliedPromo && (
+                <div className="flex justify-between items-center text-green-600">
+                  <span className="flex items-center gap-1">
+                    <Tag size={14} />
+                    Mã <span className="font-mono font-bold ml-1">{appliedPromo.code}</span>
+                  </span>
+                  <span className="font-semibold">-{discount.toLocaleString()}₫</span>
+                </div>
+              )}
               <div className="flex justify-between pt-3 border-t-2 border-gray-300 text-xl font-bold">
                 <span>Tổng cộng</span>
                 <span className="text-pink-600">{finalTotal.toLocaleString()}₫</span>
@@ -257,7 +273,6 @@ export default function CheckoutPage() {
 
             <div className="bg-gray-50 rounded-2xl p-4 mb-4">
               <p className="text-sm font-semibold text-gray-700 mb-3">Quét mã QR để thanh toán</p>
-              {/* VietQR auto-generated */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://img.vietqr.io/image/TPBank-00004775170-compact2.jpg?amount=${finalTotal}&addInfo=DH${orderId}&accountName=LE%20DUY%20KHANG`}

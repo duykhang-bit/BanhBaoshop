@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   LayoutDashboard, Package, ShoppingBag, LogOut, User, Phone,
-  MapPin, CreditCard, Wallet, CheckCircle, XCircle, Clock, Truck, Settings
+  MapPin, CreditCard, Wallet, CheckCircle, XCircle, Clock, Truck, Settings, Tag, Trash2
 } from 'lucide-react'
 
 interface OrderItem {
@@ -26,6 +26,8 @@ interface Order {
   paymentMethod: string
   status: string
   totalAmount: number
+  discountCode: string
+  discountAmount: number
   items: OrderItem[]
   createdAt: string
 }
@@ -33,6 +35,7 @@ interface Order {
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -67,7 +70,6 @@ export default function AdminOrdersPage() {
   const updateStatus = async (orderId: string, newStatus: string) => {
     const token = localStorage.getItem('admin_token')
     if (!token) return
-
     try {
       await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PUT',
@@ -80,6 +82,24 @@ export default function AdminOrdersPage() {
       fetchOrders(token)
     } catch (error) {
       console.error('Error:', error)
+    }
+  }
+
+  const handleDelete = async (orderId: string) => {
+    if (!confirm('Xóa đơn hàng này? Không thể hoàn tác.')) return
+    const token = localStorage.getItem('admin_token')
+    if (!token) return
+    setDeletingId(orderId)
+    try {
+      await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      fetchOrders(token)
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -152,6 +172,7 @@ export default function AdminOrdersPage() {
           {orders.map((order) => {
             const statusInfo = getStatusInfo(order.status)
             const StatusIcon = statusInfo.icon
+            const subtotal = order.totalAmount + (order.discountAmount || 0)
 
             return (
               <motion.div
@@ -174,10 +195,13 @@ export default function AdminOrdersPage() {
                     </p>
                   </div>
                   <div className="text-right">
+                    {order.discountAmount > 0 && (
+                      <p className="text-sm text-gray-400 line-through">{subtotal.toLocaleString()}₫</p>
+                    )}
                     <p className="text-2xl font-bold text-pink-600">
                       {order.totalAmount.toLocaleString()}₫
                     </p>
-                    <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
+                    <div className="flex items-center gap-1 text-sm text-gray-600 mt-1 justify-end">
                       {order.paymentMethod === 'cod' ? <Wallet size={14} /> : <CreditCard size={14} />}
                       {order.paymentMethod === 'cod' ? 'COD' : 'Chuyển khoản'}
                     </div>
@@ -225,8 +249,20 @@ export default function AdminOrdersPage() {
                   ))}
                 </div>
 
-                {/* Status Actions */}
-                <div className="flex gap-2 pt-4 border-t">
+                {/* Discount Info */}
+                {order.discountCode && order.discountAmount > 0 && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-green-700">
+                      <Tag size={16} />
+                      <span className="text-sm">Mã giảm giá:</span>
+                      <span className="font-mono font-bold">{order.discountCode}</span>
+                    </div>
+                    <span className="text-green-700 font-bold">-{order.discountAmount.toLocaleString()}₫</span>
+                  </div>
+                )}
+
+                {/* Status Actions + Delete */}
+                <div className="flex gap-2 pt-4 border-t flex-wrap">
                   {order.status === 'pending' && (
                     <>
                       <button
@@ -259,6 +295,16 @@ export default function AdminOrdersPage() {
                       Hoàn thành
                     </button>
                   )}
+
+                  {/* Nút xóa đơn — luôn hiện */}
+                  <button
+                    onClick={() => handleDelete(order.id)}
+                    disabled={deletingId === order.id}
+                    className="ml-auto px-4 py-2 bg-gray-100 text-red-500 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors text-sm font-medium flex items-center gap-1 disabled:opacity-50"
+                  >
+                    <Trash2 size={15} />
+                    {deletingId === order.id ? 'Đang xóa...' : 'Xóa đơn'}
+                  </button>
                 </div>
               </motion.div>
             )
