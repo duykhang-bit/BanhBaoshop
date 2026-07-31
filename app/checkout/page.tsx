@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -20,6 +20,9 @@ export default function CheckoutPage() {
   const [orderTotal, setOrderTotal] = useState(0)
   const [paymentConfirmed, setPaymentConfirmed] = useState(false)
   const [confirmingPayment, setConfirmingPayment] = useState(false)
+  const [waitingConfirm, setWaitingConfirm] = useState(false)
+  const [adminConfirmed, setAdminConfirmed] = useState(false)
+  const [countdown, setCountdown] = useState(15 * 60) // 15 phút
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -33,6 +36,34 @@ export default function CheckoutPage() {
   const shippingFee = calcShipping(totalPrice)
   const discount = appliedPromo?.discount || 0
   const finalTotal = totalPrice + shippingFee - discount
+
+  // Poll trạng thái đơn mỗi 5 giây khi đang chờ xác nhận
+  useEffect(() => {
+    if (!waitingConfirm || adminConfirmed || !fullOrderId) return
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/orders/${fullOrderId}/status`)
+        const data = await res.json()
+        if (data.status === 'confirmed') {
+          setAdminConfirmed(true)
+          clearInterval(interval)
+        }
+      } catch {}
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [waitingConfirm, adminConfirmed, fullOrderId])
+
+  // Đếm ngược 15 phút
+  useEffect(() => {
+    if (!waitingConfirm || adminConfirmed) return
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) { clearInterval(timer); return 0 }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [waitingConfirm, adminConfirmed])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,12 +117,11 @@ export default function CheckoutPage() {
   const handleConfirmPayment = async () => {
     setConfirmingPayment(true)
     try {
-      await fetch(`/api/orders/${fullOrderId}/confirm-payment`, {
-        method: 'POST',
-      })
+      await fetch(`/api/orders/${fullOrderId}/confirm-payment`, { method: 'POST' })
+      setWaitingConfirm(true)
       setPaymentConfirmed(true)
     } catch {
-      // vẫn show confirmed dù lỗi, vì đây chỉ là UX
+      setWaitingConfirm(true)
       setPaymentConfirmed(true)
     } finally {
       setConfirmingPayment(false)
@@ -245,17 +275,18 @@ export default function CheckoutPage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
           <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
-            className="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl my-4">
+            className="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl my-4 relative">
 
-            {!paymentConfirmed ? (
+            {/* Nút X luôn hiện */}
+            <button onClick={() => { setShowQR(false); router.push('/') }}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition-colors text-lg font-bold">
+              ✕
+            </button>
+
+            {/* Trạng thái 1: Hiện QR, chờ khách bấm đã CK */}
+            {!paymentConfirmed && (
               <>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-3xl">🧾</div>
-                  <button onClick={() => { setShowQR(false); router.push('/') }}
-                    className="text-gray-400 hover:text-gray-600 text-sm flex items-center gap-1">
-                    ✕ Đóng
-                  </button>
-                </div>
+                <div className="text-3xl mb-2">🧾</div>
                 <h3 className="text-xl font-bold mb-1">Đặt hàng thành công!</h3>
                 <p className="text-gray-500 text-sm mb-1">Mã đơn: <span className="font-bold text-pink-600">#{orderId}</span></p>
                 <p className="text-xs text-gray-400 mb-4">Quét QR để thanh toán, sau đó bấm xác nhận bên dưới</p>
@@ -275,31 +306,58 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   onClick={handleConfirmPayment} disabled={confirmingPayment}
                   className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg disabled:opacity-50 flex items-center justify-center gap-2">
                   <CheckCircle size={22} />
                   {confirmingPayment ? 'Đang xử lý...' : 'Tôi đã chuyển khoản'}
                 </motion.button>
-                <button onClick={() => { setShowQR(false); router.push('/') }}
-                  className="w-full mt-3 py-3 text-gray-500 hover:text-gray-700 text-sm font-medium">
-                  Hủy và quay về trang chủ
-                </button>
               </>
-            ) : (
+            )}
+
+            {/* Trạng thái 2: Chờ admin xác nhận (polling) */}
+            {paymentConfirmed && !adminConfirmed && (
               <>
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring' }}
-                  className="text-6xl mb-4">✅</motion.div>
-                <h3 className="text-2xl font-bold text-green-600 mb-2">Cảm ơn bạn!</h3>
-                <p className="text-gray-600 mb-1">Đơn <span className="font-bold text-pink-600">#{orderId}</span> đang chờ xác nhận</p>
-                <p className="text-sm text-gray-500 mb-6">Shop sẽ liên hệ với bạn trong thời gian sớm nhất</p>
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                  className="text-5xl mb-4 inline-block">⏳</motion.div>
+                <h3 className="text-xl font-bold text-orange-500 mb-2">Đang chờ xác nhận</h3>
+                <p className="text-gray-600 mb-1">Mã đơn: <span className="font-bold text-pink-600">#{orderId}</span></p>
+                <p className="text-sm text-gray-500 mb-4">Shop đang kiểm tra giao dịch của bạn...</p>
+
+                {/* Countdown */}
+                <div className="bg-orange-50 rounded-2xl p-4 mb-4">
+                  <p className="text-xs text-orange-600 mb-1">Thời gian chờ còn lại</p>
+                  <p className="text-3xl font-bold text-orange-500 font-mono">
+                    {String(Math.floor(countdown / 60)).padStart(2, '0')}:{String(countdown % 60).padStart(2, '0')}
+                  </p>
+                  {countdown === 0 && (
+                    <p className="text-xs text-gray-500 mt-2">Shop sẽ liên hệ lại với bạn sớm nhất</p>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                  <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }}
+                    className="w-2 h-2 bg-orange-400 rounded-full" />
+                  Đang chờ admin xác nhận...
+                </div>
+              </>
+            )}
+
+            {/* Trạng thái 3: Admin đã xác nhận */}
+            {adminConfirmed && (
+              <>
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}
+                  className="text-6xl mb-4">🎉</motion.div>
+                <h3 className="text-2xl font-bold text-green-600 mb-2">Đặt hàng thành công!</h3>
+                <p className="text-gray-600 mb-1">Đơn <span className="font-bold text-pink-600">#{orderId}</span> đã được xác nhận</p>
+                <p className="text-sm text-gray-500 mb-6">Shop sẽ liên hệ và giao hàng sớm nhất!</p>
                 <button onClick={() => router.push('/')}
                   className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold">
                   Về trang chủ
                 </button>
               </>
             )}
+
           </motion.div>
         </motion.div>
       )}
