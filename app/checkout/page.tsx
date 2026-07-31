@@ -17,6 +17,7 @@ export default function CheckoutPage() {
   const [showQR, setShowQR] = useState(false)
   const [orderId, setOrderId] = useState('')
   const [fullOrderId, setFullOrderId] = useState('')
+  const [orderTotal, setOrderTotal] = useState(0)
   const [paymentConfirmed, setPaymentConfirmed] = useState(false)
   const [confirmingPayment, setConfirmingPayment] = useState(false)
 
@@ -63,6 +64,7 @@ export default function CheckoutPage() {
         const shortId = data.order.id.substring(0, 8).toUpperCase()
         setOrderId(shortId)
         setFullOrderId(data.order.id)
+        setOrderTotal(finalTotal) // lưu lại trước khi clear cart
         if (formData.paymentMethod === 'bank') {
           setShowQR(true)
           clearCart()
@@ -247,7 +249,13 @@ export default function CheckoutPage() {
 
             {!paymentConfirmed ? (
               <>
-                <div className="text-4xl mb-2">🧾</div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-3xl">🧾</div>
+                  <button onClick={() => { setShowQR(false); router.push('/') }}
+                    className="text-gray-400 hover:text-gray-600 text-sm flex items-center gap-1">
+                    ✕ Đóng
+                  </button>
+                </div>
                 <h3 className="text-xl font-bold mb-1">Đặt hàng thành công!</h3>
                 <p className="text-gray-500 text-sm mb-1">Mã đơn: <span className="font-bold text-pink-600">#{orderId}</span></p>
                 <p className="text-xs text-gray-400 mb-4">Quét QR để thanh toán, sau đó bấm xác nhận bên dưới</p>
@@ -255,29 +263,29 @@ export default function CheckoutPage() {
                 <div className="bg-gray-50 rounded-2xl p-4 mb-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`https://img.vietqr.io/image/TPBank-00004775170-compact2.jpg?amount=${finalTotal}&addInfo=DH${orderId}&accountName=LE%20DUY%20KHANG`}
+                    src={`https://img.vietqr.io/image/TPBank-00004775170-compact2.jpg?amount=${orderTotal}&addInfo=DH${orderId}&accountName=LE%20DUY%20KHANG`}
                     alt="QR Thanh toán"
                     className="w-56 h-56 mx-auto rounded-xl object-contain"
                   />
                   <div className="mt-3 space-y-1 text-sm">
                     <p className="font-bold text-gray-800">LE DUY KHANG</p>
                     <p className="text-gray-600">TPBank · <span className="font-mono font-bold">00004775170</span></p>
-                    <p className="text-2xl font-bold text-pink-600 mt-1">{finalTotal.toLocaleString()}₫</p>
+                    <p className="text-2xl font-bold text-pink-600 mt-1">{orderTotal.toLocaleString()}₫</p>
                     <p className="text-xs bg-yellow-50 text-yellow-700 px-2 py-1 rounded-lg font-mono font-bold">Nội dung: DH{orderId}</p>
                   </div>
                 </div>
 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleConfirmPayment}
-                  disabled={confirmingPayment}
-                  className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
-                >
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  onClick={handleConfirmPayment} disabled={confirmingPayment}
+                  className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg disabled:opacity-50 flex items-center justify-center gap-2">
                   <CheckCircle size={22} />
                   {confirmingPayment ? 'Đang xử lý...' : 'Tôi đã chuyển khoản'}
                 </motion.button>
-                <p className="text-xs text-gray-400 mt-3">Shop sẽ xác nhận sau khi kiểm tra giao dịch</p>
+                <button onClick={() => { setShowQR(false); router.push('/') }}
+                  className="w-full mt-3 py-3 text-gray-500 hover:text-gray-700 text-sm font-medium">
+                  Hủy và quay về trang chủ
+                </button>
               </>
             ) : (
               <>
