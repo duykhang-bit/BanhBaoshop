@@ -19,6 +19,7 @@ interface Product {
   image: string
   stock: number
   featured: boolean
+  createdAt: string
   category: { name: string; slug: string }
 }
 
