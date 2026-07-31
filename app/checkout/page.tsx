@@ -20,7 +20,7 @@ export default function CheckoutPage() {
   const [orderTotal, setOrderTotal] = useState(0)
   const [paymentConfirmed, setPaymentConfirmed] = useState(false)
   const [confirmingPayment, setConfirmingPayment] = useState(false)
-  const [waitingConfirm, setWaitingConfirm] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
   const [adminConfirmed, setAdminConfirmed] = useState(false)
   const [countdown, setCountdown] = useState(15 * 60) // 15 phút
 
@@ -39,7 +39,7 @@ export default function CheckoutPage() {
 
   // Poll trạng thái đơn mỗi 5 giây khi đang chờ xác nhận
   useEffect(() => {
-    if (!waitingConfirm || adminConfirmed || !fullOrderId) return
+    if (!paymentConfirmed || adminConfirmed || !fullOrderId) return
     const interval = setInterval(async () => {
       try {
         const res = await fetch(`/api/orders/${fullOrderId}/status`)
@@ -51,11 +51,11 @@ export default function CheckoutPage() {
       } catch {}
     }, 5000)
     return () => clearInterval(interval)
-  }, [waitingConfirm, adminConfirmed, fullOrderId])
+  }, [paymentConfirmed, adminConfirmed, fullOrderId])
 
   // Đếm ngược 15 phút
   useEffect(() => {
-    if (!waitingConfirm || adminConfirmed) return
+    if (!paymentConfirmed || adminConfirmed) return
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) { clearInterval(timer); return 0 }
@@ -63,7 +63,7 @@ export default function CheckoutPage() {
       })
     }, 1000)
     return () => clearInterval(timer)
-  }, [waitingConfirm, adminConfirmed])
+  }, [paymentConfirmed, adminConfirmed])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,8 +101,8 @@ export default function CheckoutPage() {
           clearCart()
         } else {
           clearCart()
-          alert('✅ Đặt hàng thành công! Mã đơn: #' + shortId)
-          router.push('/')
+          setOrderId(shortId)
+          setShowSuccess(true)
         }
       } else {
         alert(data.error || 'Lỗi khi đặt hàng, thử lại sau')
@@ -358,6 +358,39 @@ export default function CheckoutPage() {
               </>
             )}
 
+          </motion.div>
+        </motion.div>
+      )}
+      {/* COD Success Modal */}
+      {showSuccess && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div initial={{ scale: 0.8, y: 20 }} animate={{ scale: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 200 }}
+            className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative">
+
+            <button onClick={() => router.push('/')}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold">
+              ✕
+            </button>
+
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+              className="text-6xl mb-4">🎉</motion.div>
+
+            <h3 className="text-2xl font-bold text-green-600 mb-2">Đặt hàng thành công!</h3>
+            <p className="text-gray-600 mb-1">Mã đơn: <span className="font-bold text-pink-600">#{orderId}</span></p>
+            <p className="text-sm text-gray-500 mb-6">Shop sẽ liên hệ xác nhận và giao hàng sớm nhất!</p>
+
+            <div className="bg-green-50 rounded-2xl p-4 mb-6 text-sm text-green-700">
+              <p>💰 Thanh toán khi nhận hàng (COD)</p>
+              <p className="mt-1">🚚 Giao hàng trong 2-3 ngày</p>
+            </div>
+
+            <button onClick={() => router.push('/')}
+              className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold text-lg shadow-lg">
+              Về trang chủ
+            </button>
           </motion.div>
         </motion.div>
       )}
