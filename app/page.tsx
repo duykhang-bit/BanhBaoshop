@@ -249,18 +249,46 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-3xl font-bold mb-2 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-            BanhBao Shop 🛍️
-          </p>
-          <p className="text-gray-400 text-sm mb-4">Mua sắm thông minh, sống đẹp mỗi ngày</p>
-          <div className="flex justify-center gap-6 text-sm text-gray-500 mb-4">
-            <Link href="/products/my-pham" className="hover:text-pink-400 transition-colors">Mỹ Phẩm</Link>
-            <Link href="/products/phan-bon" className="hover:text-green-400 transition-colors">Phân Bón</Link>
-            <Link href="/products/cong-nghe" className="hover:text-blue-400 transition-colors">Công Nghệ</Link>
-            <Link href="/cart" className="hover:text-purple-400 transition-colors">Giỏ Hàng</Link>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+            {/* Brand */}
+            <div>
+              <p className="text-2xl font-bold mb-2 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                BanhBao Shop 🛍️
+              </p>
+              <p className="text-gray-400 text-sm">Mua sắm thông minh, sống đẹp mỗi ngày</p>
+            </div>
+
+            {/* Links */}
+            <div>
+              <p className="font-semibold text-white mb-3">Danh mục</p>
+              <div className="space-y-2 text-sm text-gray-400">
+                <Link href="/products/my-pham" className="block hover:text-pink-400 transition-colors">💄 Mỹ Phẩm</Link>
+                <Link href="/products/phan-bon" className="block hover:text-green-400 transition-colors">🌱 Phân Bón</Link>
+                <Link href="/products/cong-nghe" className="block hover:text-blue-400 transition-colors">💻 Công Nghệ</Link>
+                <Link href="/cart" className="block hover:text-purple-400 transition-colors">🛒 Giỏ Hàng</Link>
+              </div>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <p className="font-semibold text-white mb-3">Liên hệ</p>
+              <div className="space-y-2 text-sm text-gray-400">
+                <p className="flex items-start gap-2">
+                  <span>📞</span>
+                  <a href="tel:0389839161" className="hover:text-pink-400 transition-colors font-semibold text-white">0389 839 161</a>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span>📍</span>
+                  <span>Ấp Mỹ Bình, Xã Phong Điền / Xã Sông Đốc, Huyện Trần Văn Thời, Tỉnh Cà Mau</span>
+                </p>
+              </div>
+            </div>
           </div>
-          <p className="text-gray-600 text-xs">© 2026 BanhBao Shop. All rights reserved.</p>
+
+          <div className="border-t border-gray-800 pt-6 text-center">
+            <p className="text-gray-600 text-xs">© 2026 BanhBao Shop. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
