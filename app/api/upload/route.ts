@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
+import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
+import { existsSync } from 'fs'
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
-    
+
     if (!file) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
     }
@@ -14,18 +15,23 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Generate unique filename
+    // Tạo thư mục uploads nếu chưa có
+    const uploadsDir = join(process.cwd(), 'public/uploads')
+    if (!existsSync(uploadsDir)) {
+      await mkdir(uploadsDir, { recursive: true })
+    }
+
+    // Generate unique filename, giữ extension gốc
     const timestamp = Date.now()
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-    const filename = `${timestamp}-${originalName}`
-    const filepath = join(process.cwd(), 'public/uploads', filename)
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const filename = `${timestamp}.${ext}`
+    const filepath = join(uploadsDir, filename)
 
     await writeFile(filepath, buffer)
 
-    // Return public URL
     const imageUrl = `/uploads/${filename}`
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       success: true,
       imageUrl,
       message: 'Upload thành công!'
