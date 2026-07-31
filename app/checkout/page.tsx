@@ -18,11 +18,11 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState('')
   const [fullOrderId, setFullOrderId] = useState('')
   const [orderTotal, setOrderTotal] = useState(0)
-  const [paymentConfirmed, setPaymentConfirmed] = useState(false)
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false) // khách đã bấm "tôi đã CK"
   const [confirmingPayment, setConfirmingPayment] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [adminConfirmed, setAdminConfirmed] = useState(false)
-  const [countdown, setCountdown] = useState(15 * 60) // 15 phút
+  const [showSuccess, setShowSuccess] = useState(false) // COD success
+  const [adminConfirmed, setAdminConfirmed] = useState(false) // admin đã xác nhận
+  const [countdown, setCountdown] = useState(15 * 60)
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -118,10 +118,8 @@ export default function CheckoutPage() {
     setConfirmingPayment(true)
     try {
       await fetch(`/api/orders/${fullOrderId}/confirm-payment`, { method: 'POST' })
-      setWaitingConfirm(true)
       setPaymentConfirmed(true)
     } catch {
-      setWaitingConfirm(true)
       setPaymentConfirmed(true)
     } finally {
       setConfirmingPayment(false)
