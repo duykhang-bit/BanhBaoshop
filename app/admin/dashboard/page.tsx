@@ -134,6 +134,15 @@ export default function AdminDashboard() {
     setUploading(true)
     setUploadError('')
 
+    // Preview ngay bằng base64
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      if (ev.target?.result) {
+        setFormData((prev) => ({ ...prev, image: ev.target!.result as string }))
+      }
+    }
+    reader.readAsDataURL(file)
+
     try {
       const uploadFormData = new FormData()
       uploadFormData.append('file', file)
@@ -146,12 +155,15 @@ export default function AdminDashboard() {
       const data = await res.json()
 
       if (res.ok) {
+        // Thay base64 bằng URL thật sau khi upload xong
         setFormData((prev) => ({ ...prev, image: data.imageUrl }))
       } else {
         setUploadError(data.error || 'Upload thất bại')
+        setFormData((prev) => ({ ...prev, image: '' }))
       }
     } catch (error) {
       setUploadError('Lỗi kết nối, thử lại sau')
+      setFormData((prev) => ({ ...prev, image: '' }))
     } finally {
       setUploading(false)
     }
@@ -521,12 +533,11 @@ export default function AdminDashboard() {
                   {/* Image Preview */}
                   {formData.image && (
                     <div className="mb-3 relative w-full h-48 rounded-xl overflow-hidden border-2 border-gray-200">
-                      <Image 
-                        src={formData.image} 
-                        alt="Preview" 
-                        fill 
-                        className="object-cover" 
-                        unoptimized 
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={formData.image}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   )}
