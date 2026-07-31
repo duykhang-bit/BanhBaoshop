@@ -120,12 +120,10 @@ export default function AdminDashboard() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       setUploadError('Vui lòng chọn file ảnh (jpg, png, webp...)')
       return
     }
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setUploadError('Ảnh quá lớn! Vui lòng chọn ảnh dưới 5MB')
       return
@@ -134,39 +132,28 @@ export default function AdminDashboard() {
     setUploading(true)
     setUploadError('')
 
-    // Preview ngay bằng base64
+    // Resize + convert sang base64 để lưu thẳng vào DB
     const reader = new FileReader()
     reader.onload = (ev) => {
-      if (ev.target?.result) {
-        setFormData((prev) => ({ ...prev, image: ev.target!.result as string }))
+      const img = new window.Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const MAX = 800
+        let w = img.width
+        let h = img.height
+        if (w > h && w > MAX) { h = Math.round(h * MAX / w); w = MAX }
+        else if (h > MAX) { w = Math.round(w * MAX / h); h = MAX }
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, w, h)
+        const base64 = canvas.toDataURL('image/jpeg', 0.85)
+        setFormData((prev) => ({ ...prev, image: base64 }))
+        setUploading(false)
       }
+      img.src = ev.target!.result as string
     }
     reader.readAsDataURL(file)
-
-    try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
-
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFormData,
-      })
-
-      const data = await res.json()
-
-      if (res.ok) {
-        // Thay base64 bằng URL thật sau khi upload xong
-        setFormData((prev) => ({ ...prev, image: data.imageUrl }))
-      } else {
-        setUploadError(data.error || 'Upload thất bại')
-        setFormData((prev) => ({ ...prev, image: '' }))
-      }
-    } catch (error) {
-      setUploadError('Lỗi kết nối, thử lại sau')
-      setFormData((prev) => ({ ...prev, image: '' }))
-    } finally {
-      setUploading(false)
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
