@@ -10,13 +10,14 @@ export async function GET(request: NextRequest) {
     let config = await prisma.shopConfig.findUnique({ where: { id: 'singleton' } })
     if (!config) {
       config = await prisma.shopConfig.create({
-        data: { id: 'singleton', shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: '[]', homepageCategories: '[]' }
+        data: { id: 'singleton', shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: '[]', homepageCategories: '[]', hiddenNavItems: '[]' }
       })
     }
     return NextResponse.json({
       ...config,
       promoCodes: JSON.parse(config.promoCodes),
       homepageCategories: JSON.parse((config as any).homepageCategories || '[]'),
+      hiddenNavItems: JSON.parse((config as any).hiddenNavItems || '[]'),
     })
   } catch (error) {
     return NextResponse.json({ error: 'Lỗi khi tải config' }, { status: 500 })
@@ -29,7 +30,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { shippingFee, freeShippingMin, shippingEnabled, showShippingHint, promoEnabled, promoCodes, homepageCategories } = body
+    const { shippingFee, freeShippingMin, shippingEnabled, showShippingHint, promoEnabled, promoCodes, homepageCategories, hiddenNavItems } = body
 
     const config = await prisma.shopConfig.upsert({
       where: { id: 'singleton' },
@@ -41,6 +42,7 @@ export async function PUT(request: NextRequest) {
         promoEnabled: Boolean(promoEnabled),
         promoCodes: JSON.stringify(promoCodes || []),
         homepageCategories: JSON.stringify(homepageCategories || []),
+        hiddenNavItems: JSON.stringify(hiddenNavItems || []),
       },
       create: {
         id: 'singleton',
@@ -51,6 +53,7 @@ export async function PUT(request: NextRequest) {
         promoEnabled: Boolean(promoEnabled),
         promoCodes: JSON.stringify(promoCodes || []),
         homepageCategories: JSON.stringify(homepageCategories || []),
+        hiddenNavItems: JSON.stringify(hiddenNavItems || []),
       },
     })
 
@@ -58,6 +61,7 @@ export async function PUT(request: NextRequest) {
       ...config,
       promoCodes: JSON.parse(config.promoCodes),
       homepageCategories: JSON.parse((config as any).homepageCategories || '[]'),
+      hiddenNavItems: JSON.parse((config as any).hiddenNavItems || '[]'),
     })
   } catch (error) {
     return NextResponse.json({ error: 'Lỗi khi lưu config' }, { status: 500 })

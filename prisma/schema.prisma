@@ -73,6 +73,7 @@ model ShopConfig {
   promoEnabled        Boolean @default(false)
   promoCodes          String  @default("[]")
   homepageCategories  String  @default("[]")
+  hiddenNavItems      String  @default("[]")
 }
 
 model UsedPromo {

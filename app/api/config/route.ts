@@ -6,7 +6,7 @@ export async function GET() {
     let config = await prisma.shopConfig.findUnique({ where: { id: 'singleton' } })
     if (!config) {
       config = await prisma.shopConfig.create({
-        data: { id: 'singleton', shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: '[]', homepageCategories: '[]' }
+        data: { id: 'singleton', shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: '[]', homepageCategories: '[]', hiddenNavItems: '[]' }
       })
     }
     return NextResponse.json({
@@ -17,8 +17,9 @@ export async function GET() {
       promoEnabled: config.promoEnabled,
       promoCodes: JSON.parse(config.promoCodes),
       homepageCategories: JSON.parse((config as any).homepageCategories || '[]'),
+      hiddenNavItems: JSON.parse((config as any).hiddenNavItems || '[]'),
     })
   } catch {
-    return NextResponse.json({ shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: [], homepageCategories: [] })
+    return NextResponse.json({ shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [] })
   }
 }

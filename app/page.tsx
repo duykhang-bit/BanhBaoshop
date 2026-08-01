@@ -39,6 +39,7 @@ export default function HomePage() {
   const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({})
   const [addedId, setAddedId] = useState<string | null>(null)
   const [toast, setToast] = useState<{ name: string } | null>(null)
+  const [hiddenNavItems, setHiddenNavItems] = useState<string[]>([])
   const { items, addItem } = useCartStore()
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
 
@@ -58,6 +59,7 @@ export default function HomePage() {
     // Lấy config để biết danh mục nào hiện trang chủ
     fetch('/api/config').then(r => r.json()).then(data => {
       setHomepageSlugs(data.homepageCategories || [])
+      setHiddenNavItems(data.hiddenNavItems || [])
     })
     // Lấy danh sách tất cả categories
     fetch('/api/categories').then(r => r.json()).then(data => {
@@ -140,7 +142,7 @@ export default function HomePage() {
               className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold flex-shrink-0 mr-2">
               <Menu size={16} /> DANH MỤC
             </button>
-            {allCategories.map(cat => {
+            {allCategories.filter(cat => !hiddenNavItems.includes(cat.slug)).map(cat => {
               const info = CATEGORY_COLORS[cat.slug] || { emoji: '🛒', from: 'from-gray-400 to-gray-500' }
               return (
                 <Link key={cat.id} href={`/products/${cat.slug}`}>
@@ -150,11 +152,13 @@ export default function HomePage() {
                 </Link>
               )
             })}
-            <Link href="/my-orders">
-              <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-pink-50 hover:text-pink-600 flex-shrink-0 whitespace-nowrap">
-                📦 Đơn hàng
-              </button>
-            </Link>
+            {!hiddenNavItems.includes('my-orders') && (
+              <Link href="/my-orders">
+                <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-pink-50 hover:text-pink-600 flex-shrink-0 whitespace-nowrap">
+                  📦 Đơn hàng
+                </button>
+              </Link>
+            )}
           </div>
         </div>
 

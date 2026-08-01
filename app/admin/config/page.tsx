@@ -22,6 +22,7 @@ interface Config {
   promoEnabled: boolean
   promoCodes: PromoCode[]
   homepageCategories: string[]
+  hiddenNavItems: string[]
 }
 
 interface Category {
@@ -41,7 +42,7 @@ export default function AdminConfigPage() {
   const router = useRouter()
   const [config, setConfig] = useState<Config>({
     shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true,
-    showShippingHint: true, promoEnabled: false, promoCodes: [], homepageCategories: [],
+    showShippingHint: true, promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [],
   })
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -184,6 +185,42 @@ export default function AdminConfigPage() {
           {config.homepageCategories.length === 0 && (
             <p className="text-center text-sm text-gray-400 py-4">Chưa chọn danh mục nào → trang chủ sẽ không hiện sản phẩm</p>
           )}
+        </motion.div>
+
+        {/* Nav Items Config */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-5">
+          <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <span className="text-base">🧭</span>
+            </div>
+            Thanh Điều Hướng
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">Ẩn/hiện các mục trong thanh nav trang chủ</p>
+          <div className="space-y-2">
+            {[
+              ...categories.map(cat => ({ key: cat.slug, label: cat.name })),
+              { key: 'my-orders', label: '📦 Đơn hàng' },
+            ].map(item => {
+              const isHidden = config.hiddenNavItems.includes(item.key)
+              return (
+                <div key={item.key} className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all ${isHidden ? 'border-gray-200 bg-gray-50 opacity-60' : 'border-green-200 bg-green-50'}`}>
+                  <span className="font-medium text-gray-800 text-sm">{item.label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">{isHidden ? 'Ẩn' : 'Hiện'}</span>
+                    <Toggle
+                      value={!isHidden}
+                      onChange={() => setConfig(prev => ({
+                        ...prev,
+                        hiddenNavItems: isHidden
+                          ? prev.hiddenNavItems.filter(k => k !== item.key)
+                          : [...prev.hiddenNavItems, item.key]
+                      }))}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </motion.div>
 
         {/* Shipping */}
