@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Sparkles, Sprout, Laptop, ShoppingCart, User, ChevronRight, Star, Zap, Shield, Truck } from 'lucide-react'
+import { Sparkles, Sprout, Laptop, ShoppingCart, User, ChevronRight, Star, Zap, Shield, Truck, ShoppingBag } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useCartStore } from '@/lib/cartStore'
 
@@ -62,6 +62,12 @@ export default function HomePage() {
             </motion.div>
           </Link>
           <div className="flex items-center gap-3">
+            <Link href="/my-orders">
+              <motion.button whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-1.5 text-gray-600 hover:text-pink-600 text-sm font-medium transition-colors">
+                <ShoppingBag size={16} /> Đơn hàng
+              </motion.button>
+            </Link>
             <Link href="/cart">
               <motion.button whileHover={{ scale: 1.05 }} className="relative p-2 rounded-full hover:bg-pink-50">
                 <ShoppingCart size={22} className="text-gray-700" />
@@ -239,7 +245,9 @@ export default function HomePage() {
                 <Link href="/products/my-pham" className="block hover:text-pink-400 transition-colors">💄 Mỹ Phẩm</Link>
                 <Link href="/products/phan-bon" className="block hover:text-green-400 transition-colors">🌱 Phân Bón</Link>
                 <Link href="/products/cong-nghe" className="block hover:text-blue-400 transition-colors">💻 Công Nghệ</Link>
+                <Link href="/products/tom-giong" className="block hover:text-orange-400 transition-colors">🦐 Tôm Giống</Link>
                 <Link href="/cart" className="block hover:text-purple-400 transition-colors">🛒 Giỏ Hàng</Link>
+                <Link href="/my-orders" className="block hover:text-pink-400 transition-colors">📦 Tra Cứu Đơn Hàng</Link>
               </div>
             </div>
 
