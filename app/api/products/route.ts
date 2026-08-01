@@ -6,28 +6,22 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
+    const limit = searchParams.get('limit')
 
     const where: any = {}
-    
+
     if (category) {
       const cat = await prisma.category.findUnique({ where: { slug: category } })
-      if (cat) {
-        where.categoryId = cat.id
-      }
+      if (cat) where.categoryId = cat.id
     }
-    
-    if (featured === 'true') {
-      where.featured = true
-    }
+
+    if (featured === 'true') where.featured = true
 
     const products = await prisma.product.findMany({
       where,
-      include: {
-        category: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      include: { category: true },
+      orderBy: { createdAt: 'desc' },
+      ...(limit ? { take: parseInt(limit) } : {}),
     })
 
     return NextResponse.json({ products })

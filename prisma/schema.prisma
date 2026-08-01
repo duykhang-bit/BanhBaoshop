@@ -72,6 +72,7 @@ model ShopConfig {
   showShippingHint    Boolean @default(true)
   promoEnabled        Boolean @default(false)
   promoCodes          String  @default("[]")
+  homepageCategories  String  @default("[]")
 }
 
 model UsedPromo {
