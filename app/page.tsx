@@ -380,7 +380,11 @@ export default function HomePage() {
               <div className="space-y-2 text-sm text-gray-400">
                 <p className="flex items-start gap-2">
                   <span>📞</span>
-                  <a href="tel:0389839161" className="hover:text-pink-400 font-semibold text-white">0389 839 161</a>
+                  <a href="tel:0389839161" className="hover:text-pink-400 transition-colors font-semibold text-white">0389 839 161</a>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span>💬</span>
+                  <a href="https://www.facebook.com/thitam.truong.5268" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">Facebook</a>
                 </p>
                 <p className="flex items-start gap-2">
                   <span>📍</span>
