@@ -1,5 +1,4 @@
 'use client'
-'use client'
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
@@ -68,6 +67,7 @@ export default function AdminConfigPage() {
           promoEnabled: configData.promoEnabled ?? false,
           promoCodes: configData.promoCodes ?? [],
           homepageCategories: configData.homepageCategories ?? [],
+          hiddenNavItems: configData.hiddenNavItems ?? [],
         })
       }
       setCategories(catData.categories || [])
