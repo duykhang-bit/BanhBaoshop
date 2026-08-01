@@ -268,7 +268,7 @@ export default function HomePage() {
                     <p>Chưa có sản phẩm</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                     {products.map((product, i) => (
                       <motion.div key={product.id}
                         initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
@@ -296,19 +296,19 @@ export default function HomePage() {
                                 </div>
                               )}
                             </div>
-                            <div className="p-3">
-                              <p className="text-sm font-medium text-gray-800 line-clamp-2 leading-tight mb-1">{product.name}</p>
-                              <div className="flex items-center justify-between gap-2">
-                                <p className={`text-base font-bold bg-gradient-to-r ${info.from} bg-clip-text text-transparent`}>
+                            <div className="p-2">
+                              <p className="text-xs font-medium text-gray-800 line-clamp-2 leading-tight mb-1">{product.name}</p>
+                              <div className="flex items-center justify-between gap-1">
+                                <p className={`text-sm font-bold bg-gradient-to-r ${info.from} bg-clip-text text-transparent`}>
                                   {product.price.toLocaleString('vi-VN')}₫
                                 </p>
                                 <motion.button
                                   whileTap={{ scale: 0.9 }}
                                   onClick={(e) => handleAddToCart(product, e)}
                                   disabled={product.stock === 0}
-                                  className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold text-white shadow-sm disabled:opacity-40 bg-gradient-to-r ${info.from}`}
+                                  className={`flex items-center gap-0.5 px-2 py-1 rounded-lg text-xs font-bold text-white shadow-sm disabled:opacity-40 bg-gradient-to-r ${info.from} flex-shrink-0`}
                                 >
-                                  {addedId === product.id ? '✓' : <><Plus size={12} /> MUA</>}
+                                  {addedId === product.id ? '✓' : <><Plus size={10} /> MUA</>}
                                 </motion.button>
                               </div>
                             </div>
