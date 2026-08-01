@@ -335,18 +335,6 @@ export default function CartPage() {
                     </div>
                     <span>Thanh toán an toàn & bảo mật</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-lg">
-                      🚚
-                    </div>
-                    <span>Giao hàng nhanh 2-3 ngày</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-lg">
-                      🔄
-                    </div>
-                    <span>Đổi trả miễn phí trong 7 ngày</span>
-                  </div>
                 </div>
               </div>
             </motion.div>
