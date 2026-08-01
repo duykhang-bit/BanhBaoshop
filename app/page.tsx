@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, User, ShoppingBag, Search, ChevronRight, Menu, X, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -38,6 +38,7 @@ export default function HomePage() {
   const [homepageSlugs, setHomepageSlugs] = useState<string[]>([])
   const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({})
   const [addedId, setAddedId] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ name: string } | null>(null)
   const { items, addItem } = useCartStore()
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
 
@@ -46,7 +47,9 @@ export default function HomePage() {
     e.stopPropagation()
     addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 })
     setAddedId(product.id)
+    setToast({ name: product.name })
     setTimeout(() => setAddedId(null), 1500)
+    setTimeout(() => setToast(null), 2500)
   }
 
   useEffect(() => { setMounted(true) }, [])
@@ -321,8 +324,32 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-10 mt-10">
+      {/* Toast thông báo thêm giỏ hàng */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 60, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 60, scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-xs w-full mx-4"
+          >
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-sm">✓</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-gray-400">Đã thêm vào giỏ hàng</p>
+              <p className="text-sm font-semibold truncate">{toast.name}</p>
+            </div>
+            <Link href="/cart" onClick={() => setToast(null)}
+              className="text-xs text-pink-400 font-bold flex-shrink-0 hover:text-pink-300">
+              Xem giỏ →
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer */} className="bg-gray-900 text-white py-10 mt-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
