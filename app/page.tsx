@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ShoppingCart, User, ShoppingBag, Search, ChevronRight, Menu, X } from 'lucide-react'
+import { ShoppingCart, User, ShoppingBag, Search, ChevronRight, Menu, X, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useCartStore } from '@/lib/cartStore'
 import Image from 'next/image'
@@ -37,8 +37,17 @@ export default function HomePage() {
   const [allCategories, setAllCategories] = useState<Category[]>([])
   const [homepageSlugs, setHomepageSlugs] = useState<string[]>([])
   const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({})
-  const { items } = useCartStore()
+  const [addedId, setAddedId] = useState<string | null>(null)
+  const { items, addItem } = useCartStore()
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
+
+  const handleAddToCart = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 })
+    setAddedId(product.id)
+    setTimeout(() => setAddedId(null), 1500)
+  }
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -286,9 +295,19 @@ export default function HomePage() {
                             </div>
                             <div className="p-3">
                               <p className="text-sm font-medium text-gray-800 line-clamp-2 leading-tight mb-1">{product.name}</p>
-                              <p className={`text-base font-bold bg-gradient-to-r ${info.from} bg-clip-text text-transparent`}>
-                                {product.price.toLocaleString('vi-VN')}₫
-                              </p>
+                              <div className="flex items-center justify-between gap-2">
+                                <p className={`text-base font-bold bg-gradient-to-r ${info.from} bg-clip-text text-transparent`}>
+                                  {product.price.toLocaleString('vi-VN')}₫
+                                </p>
+                                <motion.button
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={(e) => handleAddToCart(product, e)}
+                                  disabled={product.stock === 0}
+                                  className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold text-white shadow-sm disabled:opacity-40 bg-gradient-to-r ${info.from}`}
+                                >
+                                  {addedId === product.id ? '✓' : <><Plus size={12} /> MUA</>}
+                                </motion.button>
+                              </div>
                             </div>
                           </div>
                         </Link>
