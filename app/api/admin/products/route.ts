@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+export const config = {
+  api: { bodyParser: { sizeLimit: '10mb' } }
+}
+
 // GET all products (admin)
 export async function GET(request: NextRequest) {
   const user = verifyToken(request)

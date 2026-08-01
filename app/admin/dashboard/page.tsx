@@ -132,14 +132,30 @@ export default function AdminDashboard() {
     setUploading(true)
     setUploadError('')
 
-    // Đọc file thành base64 và lưu thẳng vào DB
+    // Resize + compress ảnh bằng canvas trước khi lưu
     const reader = new FileReader()
     reader.onload = (ev) => {
-      const base64 = ev.target?.result as string
-      if (base64) {
+      const img = new window.Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const MAX = 600
+        let w = img.width
+        let h = img.height
+        if (w > h && w > MAX) { h = Math.round(h * MAX / w); w = MAX }
+        else if (h > MAX) { w = Math.round(w * MAX / h); h = MAX }
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, w, h)
+        const base64 = canvas.toDataURL('image/jpeg', 0.7)
         setFormData((prev) => ({ ...prev, image: base64 }))
+        setUploading(false)
       }
-      setUploading(false)
+      img.onerror = () => {
+        setUploadError('Không đọc được ảnh, thử lại')
+        setUploading(false)
+      }
+      img.src = ev.target?.result as string
     }
     reader.onerror = () => {
       setUploadError('Không đọc được file, thử lại')
