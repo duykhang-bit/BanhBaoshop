@@ -164,13 +164,13 @@ export default function CartPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: -100 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-white rounded-2xl shadow-lg p-6 flex items-center gap-6 relative overflow-hidden group"
+                    className="bg-white rounded-2xl shadow-lg p-4 flex items-start gap-3 relative overflow-hidden group"
                   >
                     {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-pink-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                    <div className="relative">
-                      <div className="relative w-32 h-32 rounded-xl overflow-hidden shadow-md">
+                    <div className="relative flex-shrink-0">
+                      <div className="relative w-20 h-20 md:w-32 md:h-32 rounded-xl overflow-hidden shadow-md">
                         <Image
                           src={item.image}
                           alt={item.name}
@@ -181,13 +181,13 @@ export default function CartPage() {
                       </div>
                     </div>
 
-                    <div className="flex-1 relative z-10">
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">{item.name}</h3>
-                      <p className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-4">
+                    <div className="flex-1 relative z-10 min-w-0">
+                      <h3 className="text-base md:text-xl font-bold text-gray-800 mb-1 line-clamp-2">{item.name}</h3>
+                      <p className="text-lg md:text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-2">
                         {item.price.toLocaleString('vi-VN')}₫
                       </p>
 
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-full px-2 py-1">
                           <motion.button
                             whileTap={{ scale: 0.9 }}
@@ -214,12 +214,12 @@ export default function CartPage() {
                     </div>
 
                     <motion.button
-                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => removeItem(item.id)}
-                      className="p-3 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors relative z-10"
+                      className="absolute top-3 right-3 p-2 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors z-10"
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={16} />
                     </motion.button>
                   </motion.div>
                 ))}
