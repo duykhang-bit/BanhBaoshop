@@ -28,7 +28,10 @@ export async function GET(request: NextRequest) {
     const products = await prisma.product.findMany({
       where,
       include: { category: true },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [
+        { featured: 'desc' },
+        { createdAt: 'desc' },
+      ],
       ...(limit ? { take: parseInt(limit) } : {}),
     })
 
