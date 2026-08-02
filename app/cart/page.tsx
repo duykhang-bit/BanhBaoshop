@@ -257,7 +257,7 @@ export default function CartPage() {
                     <span>Phí vận chuyển</span>
                     <span className="font-semibold">
                       {config.shippingByAddress ? (
-                        <span className="text-orange-500 text-sm">Shop báo khi xác nhận</span>
+                        <span className="text-orange-500 text-sm">Shop sẽ báo khi xác nhận đơn</span>
                       ) : shippingFee === 0 ? (
                         <span className="text-green-500">Miễn phí</span>
                       ) : (

@@ -241,7 +241,7 @@ export default function CheckoutPage() {
                 <span className="text-gray-600">Phí vận chuyển</span>
                 <span className="font-semibold">
                   {(config as any).shippingByAddress ? (
-                    <span className="text-orange-500 text-sm">Shop báo khi xác nhận</span>
+                    <span className="text-orange-500 text-sm">Shop sẽ báo khi xác nhận đơn</span>
                   ) : shippingFee === 0 ? (
                     <span className="text-green-600">Miễn phí</span>
                   ) : (
