@@ -274,9 +274,19 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
                       </div>
                       <div className="p-2">
                         <p className="text-xs font-medium text-gray-800 line-clamp-2 leading-tight mb-1">{product.name}</p>
-                        <p className={`text-sm font-bold bg-gradient-to-r ${info.gradient} bg-clip-text text-transparent mb-1.5`}>
-                          {product.price.toLocaleString('vi-VN')}₫
-                        </p>
+                        <div className="mb-1.5">
+                          <p className={`text-sm font-bold bg-gradient-to-r ${info.gradient} bg-clip-text text-transparent`}>
+                            {product.price.toLocaleString('vi-VN')}₫
+                          </p>
+                          {(product as any).originalPrice > 0 && (product as any).originalPrice > product.price && (
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-gray-400 line-through">{(product as any).originalPrice.toLocaleString('vi-VN')}₫</span>
+                              <span className="text-xs bg-red-500 text-white px-1 rounded font-bold">
+                                -{Math.round(100 - (product.price / (product as any).originalPrice) * 100)}%
+                              </span>
+                            </div>
+                          )}
+                        </div>
                         <motion.button
                           whileTap={{ scale: 0.9 }}
                           onClick={(e) => { e.preventDefault(); handleAddToCart(product) }}
