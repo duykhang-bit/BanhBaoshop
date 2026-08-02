@@ -239,8 +239,14 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Phí vận chuyển</span>
-                <span className={`font-semibold ${shippingFee === 0 ? 'text-green-600' : ''}`}>
-                  {shippingFee === 0 ? 'Miễn phí' : `${shippingFee.toLocaleString()}₫`}
+                <span className={`font-semibold`}>
+                  {(config as any).shippingByAddress ? (
+                    <span className="text-orange-500 text-sm">Tính khi xác nhận</span>
+                  ) : shippingFee === 0 ? (
+                    <span className="text-green-600">Miễn phí</span>
+                  ) : (
+                    `${shippingFee.toLocaleString()}₫`
+                  )}
                 </span>
               </div>
               {appliedPromo && (

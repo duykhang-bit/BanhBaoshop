@@ -19,6 +19,7 @@ interface Config {
   freeShippingMin: number
   shippingEnabled: boolean
   showShippingHint: boolean
+  shippingByAddress: boolean
   promoEnabled: boolean
   promoCodes: PromoCode[]
   homepageCategories: string[]
@@ -42,7 +43,7 @@ export default function AdminConfigPage() {
   const router = useRouter()
   const [config, setConfig] = useState<Config>({
     shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true,
-    showShippingHint: true, promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [],
+    showShippingHint: true, shippingByAddress: false, promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [],
   })
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -69,6 +70,7 @@ export default function AdminConfigPage() {
           promoCodes: configData.promoCodes ?? [],
           homepageCategories: configData.homepageCategories ?? [],
           hiddenNavItems: configData.hiddenNavItems ?? [],
+          shippingByAddress: configData.shippingByAddress ?? false,
         })
       }
       setCategories(catData.categories || [])
@@ -245,7 +247,15 @@ export default function AdminConfigPage() {
             </div>
           </div>
           <div className={`transition-all ${!config.shippingEnabled ? 'opacity-40 pointer-events-none' : ''}`}>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* Toggle chế độ phí ship */}
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-xl border border-blue-200 mb-4">
+              <div>
+                <p className="text-sm font-semibold text-gray-700">Tính theo địa chỉ</p>
+                <p className="text-xs text-gray-500">Hiện "Tính khi xác nhận đơn" thay vì số tiền cố định</p>
+              </div>
+              <Toggle value={config.shippingByAddress ?? false} onChange={() => setConfig(p => ({ ...p, shippingByAddress: !p.shippingByAddress }))} />
+            </div>
+            <div className={`grid grid-cols-2 gap-4 mb-4 ${config.shippingByAddress ? 'opacity-40 pointer-events-none' : ''}`}>
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-1.5">Phí vận chuyển (₫)</label>
                 <input type="number" value={config.shippingFee}

@@ -30,7 +30,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { shippingFee, freeShippingMin, shippingEnabled, showShippingHint, promoEnabled, promoCodes, homepageCategories, hiddenNavItems } = body
+    const { shippingFee, freeShippingMin, shippingEnabled, showShippingHint, promoEnabled, promoCodes, homepageCategories, hiddenNavItems, shippingByAddress } = body
 
     const config = await prisma.shopConfig.upsert({
       where: { id: 'singleton' },
@@ -43,6 +43,7 @@ export async function PUT(request: NextRequest) {
         promoCodes: JSON.stringify(promoCodes || []),
         homepageCategories: JSON.stringify(homepageCategories || []),
         hiddenNavItems: JSON.stringify(hiddenNavItems || []),
+        shippingByAddress: Boolean(shippingByAddress),
       },
       create: {
         id: 'singleton',
@@ -54,6 +55,7 @@ export async function PUT(request: NextRequest) {
         promoCodes: JSON.stringify(promoCodes || []),
         homepageCategories: JSON.stringify(homepageCategories || []),
         hiddenNavItems: JSON.stringify(hiddenNavItems || []),
+        shippingByAddress: Boolean(shippingByAddress),
       },
     })
 

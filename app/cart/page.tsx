@@ -256,14 +256,16 @@ export default function CartPage() {
                   <div className="flex justify-between text-gray-600">
                     <span>Phí vận chuyển</span>
                     <span className="font-semibold">
-                      {shippingFee === 0 ? (
+                      {config.shippingByAddress ? (
+                        <span className="text-orange-500 text-sm">Tính khi xác nhận đơn</span>
+                      ) : shippingFee === 0 ? (
                         <span className="text-green-500">Miễn phí</span>
                       ) : (
                         `${shippingFee.toLocaleString('vi-VN')}₫`
                       )}
                     </span>
                   </div>
-                  {shippingFee > 0 && config.showShippingHint && (
+                  {!config.shippingByAddress && shippingFee > 0 && config.showShippingHint && (
                     <div className="text-xs text-pink-600 bg-pink-50 p-3 rounded-lg">
                       💡 Mua thêm {(config.freeShippingMin - totalPrice).toLocaleString('vi-VN')}₫ để được miễn phí ship
                     </div>

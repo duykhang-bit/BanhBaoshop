@@ -18,6 +18,7 @@ export async function GET() {
       promoCodes: JSON.parse(config.promoCodes),
       homepageCategories: JSON.parse((config as any).homepageCategories || '[]'),
       hiddenNavItems: JSON.parse((config as any).hiddenNavItems || '[]'),
+      shippingByAddress: (config as any).shippingByAddress ?? false,
     })
   } catch {
     return NextResponse.json({ shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true, showShippingHint: true, promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [] })
