@@ -39,6 +39,7 @@ export default function AdminDashboard() {
     name: '',
     description: '',
     price: '',
+    originalPrice: '',
     image: '',
     categoryId: '',
     stock: '',
@@ -97,6 +98,7 @@ export default function AdminDashboard() {
         name: product.name,
         description: product.description,
         price: product.price.toString(),
+        originalPrice: (product as any).originalPrice?.toString() || '',
         image: product.image,
         categoryId: product.category.id,
         stock: product.stock.toString(),
@@ -487,12 +489,23 @@ export default function AdminDashboard() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Giá (₫) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Giá bán (₫) *</label>
                     <input
                       type="number"
                       required
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Giá gốc (₫) <span className="text-xs text-gray-400">— để trống nếu không giảm giá</span></label>
+                    <input
+                      type="number"
+                      value={formData.originalPrice}
+                      onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
                       placeholder="0"
                     />
