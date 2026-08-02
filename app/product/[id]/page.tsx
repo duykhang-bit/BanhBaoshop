@@ -239,21 +239,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   </>
                 )}
               </motion.button>
-
-              <div className="grid grid-cols-3 gap-4 mt-6">
-                <div className="text-center p-4 bg-pink-50 rounded-xl">
-                  <div className="text-2xl mb-1">🚚</div>
-                  <p className="text-xs text-gray-600">Giao hàng nhanh</p>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-xl">
-                  <div className="text-2xl mb-1">💯</div>
-                  <p className="text-xs text-gray-600">Hàng chính hãng</p>
-                </div>
-                <div className="text-center p-4 bg-blue-50 rounded-xl">
-                  <div className="text-2xl mb-1">🔄</div>
-                  <p className="text-xs text-gray-600">Đổi trả 7 ngày</p>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>

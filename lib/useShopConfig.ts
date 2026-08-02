@@ -13,6 +13,7 @@ export interface ShopConfig {
   freeShippingMin: number
   shippingEnabled: boolean
   showShippingHint: boolean
+  shippingByAddress: boolean
   promoEnabled: boolean
   promoCodes: PromoCode[]
 }
@@ -22,6 +23,7 @@ const defaultConfig: ShopConfig = {
   freeShippingMin: 300000,
   shippingEnabled: true,
   showShippingHint: true,
+  shippingByAddress: false,
   promoEnabled: false,
   promoCodes: [],
 }

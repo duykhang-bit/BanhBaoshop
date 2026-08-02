@@ -70,6 +70,7 @@ model ShopConfig {
   freeShippingMin     Float   @default(300000)
   shippingEnabled     Boolean @default(true)
   showShippingHint    Boolean @default(true)
+  shippingByAddress   Boolean @default(false)
   promoEnabled        Boolean @default(false)
   promoCodes          String  @default("[]")
   homepageCategories  String  @default("[]")
