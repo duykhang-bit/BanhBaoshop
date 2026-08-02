@@ -239,9 +239,9 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Phí vận chuyển</span>
-                <span className={`font-semibold`}>
+                <span className="font-semibold">
                   {(config as any).shippingByAddress ? (
-                    <span className="text-orange-500 text-sm">Tính khi xác nhận</span>
+                    <span className="text-orange-500 text-sm">Shop báo khi xác nhận</span>
                   ) : shippingFee === 0 ? (
                     <span className="text-green-600">Miễn phí</span>
                   ) : (
@@ -249,6 +249,11 @@ export default function CheckoutPage() {
                   )}
                 </span>
               </div>
+              {(config as any).shippingByAddress && (
+                <div className="text-xs text-gray-500 bg-orange-50 p-2 rounded-lg">
+                  📦 Nội tỉnh: 15-30k | Ngoại tỉnh: 30-50k (tùy khu vực)
+                </div>
+              )}
               {appliedPromo && (
                 <div className="flex justify-between items-center text-green-600">
                   <span className="flex items-center gap-1">

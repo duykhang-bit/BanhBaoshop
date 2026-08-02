@@ -257,7 +257,7 @@ export default function CartPage() {
                     <span>Phí vận chuyển</span>
                     <span className="font-semibold">
                       {config.shippingByAddress ? (
-                        <span className="text-orange-500 text-sm">Tính khi xác nhận đơn</span>
+                        <span className="text-orange-500 text-sm">Shop báo khi xác nhận</span>
                       ) : shippingFee === 0 ? (
                         <span className="text-green-500">Miễn phí</span>
                       ) : (
@@ -265,6 +265,11 @@ export default function CartPage() {
                       )}
                     </span>
                   </div>
+                  {config.shippingByAddress && (
+                    <div className="text-xs text-gray-500 bg-orange-50 p-2 rounded-lg">
+                      📦 Nội tỉnh: 15-30k | Ngoại tỉnh: 30-50k (tùy khu vực)
+                    </div>
+                  )}
                   {!config.shippingByAddress && shippingFee > 0 && config.showShippingHint && (
                     <div className="text-xs text-pink-600 bg-pink-50 p-3 rounded-lg">
                       💡 Mua thêm {(config.freeShippingMin - totalPrice).toLocaleString('vi-VN')}₫ để được miễn phí ship
