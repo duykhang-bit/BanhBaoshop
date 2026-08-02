@@ -193,12 +193,23 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* Hero Banner - nhỏ gọn */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 py-8 px-6">
+      {/* Hero Banner - auto slide gradient */}
+      <section className="relative overflow-hidden py-8 px-6">
+        {/* Animated gradient backgrounds */}
+        <motion.div
+          animate={{ background: [
+            'linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6)',
+            'linear-gradient(135deg, #f97316, #ec4899, #8b5cf6)',
+            'linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6)',
+            'linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6)',
+          ]}}
+          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0"
+        />
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 6, repeat: Infinity }}
+          <motion.div animate={{ scale: [1, 1.2, 1], x: [0, 30, 0] }} transition={{ duration: 6, repeat: Infinity }}
             className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
-          <motion.div animate={{ scale: [1.1, 1, 1.1] }} transition={{ duration: 8, repeat: Infinity }}
+          <motion.div animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity }}
             className="absolute -bottom-10 -left-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
         </div>
         <div className="max-w-6xl mx-auto flex items-center justify-between relative z-10">
