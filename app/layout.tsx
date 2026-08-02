@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://banhbaoshop.duckdns.org/og-image.svg',
+        url: 'https://banhbaoshop.duckdns.org/og-image.png',
         width: 1200,
         height: 630,
         alt: 'BanhBao Shop',
