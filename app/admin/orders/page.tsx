@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   Package, ShoppingBag, LogOut, User, Phone,
-  MapPin, CreditCard, Wallet, CheckCircle, XCircle, Clock, Truck, Settings, Tag, Trash2, BanknoteIcon
+  MapPin, CreditCard, Wallet, CheckCircle, XCircle, Clock, Truck, Settings, Tag, Trash2, BanknoteIcon, Menu, X
 } from 'lucide-react'
 
 interface OrderItem {
@@ -110,6 +110,7 @@ export default function AdminOrdersPage() {
 
   const awaitingCount = orders.filter(o => o.status === 'awaiting_payment').length
   const filtered = activeTab === 'all' ? orders : orders.filter(o => o.status === activeTab)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   if (loading) {
     return (
@@ -121,42 +122,31 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-purple-600 to-pink-600 text-white p-6 shadow-2xl z-10">
-        <div className="mb-8">
-          <div className="text-4xl mb-2">👑</div>
-          <h2 className="text-2xl font-bold">Admin Panel</h2>
-          <p className="text-sm text-white/70">BanhBao Shop</p>
-        </div>
-        <nav className="space-y-2">
-          <Link href="/admin/dashboard">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors">
-              <Package size={20} /><span>Sản Phẩm</span>
+      {/* Sidebar toggle */}
+      <div className={`fixed left-0 top-0 h-full bg-gradient-to-b from-purple-600 to-pink-600 text-white shadow-2xl z-20 transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-0 overflow-hidden'}`}>
+        <div className="p-5 w-60">
+          <div className="mb-8"><div className="text-3xl mb-1">👑</div><h2 className="text-xl font-bold">Admin Panel</h2></div>
+          <nav className="space-y-1">
+            <Link href="/admin/dashboard"><button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm"><Package size={18} /><span>Sản Phẩm</span></button></Link>
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/20 text-sm">
+              <ShoppingBag size={18} /><span>Đơn Hàng</span>
+              {awaitingCount > 0 && <span className="ml-auto bg-orange-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">{awaitingCount}</span>}
             </button>
-          </Link>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/20">
-            <ShoppingBag size={20} />
-            <span>Đơn Hàng</span>
-            {awaitingCount > 0 && (
-              <span className="ml-auto bg-orange-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {awaitingCount}
-              </span>
-            )}
+            <Link href="/admin/config"><button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm"><Settings size={18} /><span>Cấu Hình</span></button></Link>
+          </nav>
+          <button onClick={handleLogout} className="absolute bottom-5 left-5 right-5 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-sm">
+            <LogOut size={18} /><span>Đăng Xuất</span>
           </button>
-          <Link href="/admin/config">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors">
-              <Settings size={20} /><span>Cấu Hình</span>
-            </button>
-          </Link>
-        </nav>
-        <button onClick={handleLogout}
-          className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/20 hover:bg-red-500/30">
-          <LogOut size={20} /><span>Đăng Xuất</span>
-        </button>
+        </div>
       </div>
+      <button onClick={() => setSidebarOpen(!sidebarOpen)}
+        className={`fixed top-4 z-30 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-r-xl p-2 shadow-lg transition-all duration-300 ${sidebarOpen ? 'left-60' : 'left-0'}`}>
+        {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+      </button>
+      {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-10 md:hidden" onClick={() => setSidebarOpen(false)} />}
 
       {/* Main */}
-      <div className="ml-64 p-8">
+      <div className={`transition-all duration-300 p-4 md:p-8 ${sidebarOpen ? 'md:ml-60' : 'ml-0'}`}>
         <div className="mb-6">
           <h1 className="text-4xl font-bold text-gray-800 mb-1">Quản Lý Đơn Hàng</h1>
           <p className="text-gray-500">Tổng {orders.length} đơn · {awaitingCount > 0 && <span className="text-orange-600 font-semibold">{awaitingCount} chờ xác nhận chuyển khoản</span>}</p>

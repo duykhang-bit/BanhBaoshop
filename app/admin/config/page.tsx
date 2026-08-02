@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Package, ShoppingBag, LogOut, Settings, Plus, Trash2, Tag, Truck, Save, CheckCircle, LayoutGrid } from 'lucide-react'
+import { Package, ShoppingBag, LogOut, Settings, Plus, Trash2, Tag, Truck, Save, CheckCircle, LayoutGrid, Menu, X } from 'lucide-react'
 
 interface PromoCode {
   code: string
@@ -49,6 +49,7 @@ export default function AdminConfigPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [newCode, setNewCode] = useState({ code: '', type: 'percent' as 'percent' | 'fixed', value: 10, minOrder: 0, active: true })
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token')
@@ -124,21 +125,28 @@ export default function AdminConfigPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-60 bg-gradient-to-b from-purple-600 to-pink-600 text-white p-5 shadow-2xl z-10">
-        <div className="mb-8"><div className="text-3xl mb-1">👑</div><h2 className="text-xl font-bold">Admin Panel</h2></div>
-        <nav className="space-y-1">
-          <Link href="/admin/dashboard"><button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm"><Package size={18} />Sản Phẩm</button></Link>
-          <Link href="/admin/orders"><button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm"><ShoppingBag size={18} />Đơn Hàng</button></Link>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/20 text-sm"><Settings size={18} />Cấu Hình</button>
-        </nav>
-        <button onClick={handleLogout} className="absolute bottom-5 left-5 right-5 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-sm">
-          <LogOut size={18} />Đăng Xuất
-        </button>
+      {/* Sidebar toggle */}
+      <div className={`fixed left-0 top-0 h-full bg-gradient-to-b from-purple-600 to-pink-600 text-white shadow-2xl z-20 transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-0 overflow-hidden'}`}>
+        <div className="p-5 w-60">
+          <div className="mb-8"><div className="text-3xl mb-1">👑</div><h2 className="text-xl font-bold">Admin Panel</h2></div>
+          <nav className="space-y-1">
+            <Link href="/admin/dashboard"><button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm"><Package size={18} />Sản Phẩm</button></Link>
+            <Link href="/admin/orders"><button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm"><ShoppingBag size={18} />Đơn Hàng</button></Link>
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/20 text-sm"><Settings size={18} />Cấu Hình</button>
+          </nav>
+          <button onClick={handleLogout} className="absolute bottom-5 left-5 right-5 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-sm">
+            <LogOut size={18} />Đăng Xuất
+          </button>
+        </div>
       </div>
+      <button onClick={() => setSidebarOpen(!sidebarOpen)}
+        className={`fixed top-4 z-30 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-r-xl p-2 shadow-lg transition-all duration-300 ${sidebarOpen ? 'left-60' : 'left-0'}`}>
+        {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+      </button>
+      {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-10 md:hidden" onClick={() => setSidebarOpen(false)} />}
 
       {/* Main */}
-      <div className="ml-60 p-8 max-w-3xl">
+      <div className={`transition-all duration-300 p-4 md:p-8 max-w-3xl ${sidebarOpen ? 'md:ml-60' : 'ml-0'}`}>
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Cấu Hình Cửa Hàng</h1>
