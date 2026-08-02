@@ -71,8 +71,14 @@ export default function HomePage() {
     if (homepageSlugs.length === 0) return
     // Fetch sản phẩm cho từng danh mục được chọn
     homepageSlugs.forEach(slug => {
-      fetch(`/api/products?category=${slug}&limit=8`).then(r => r.json()).then(data => {
-        setCategoryProducts(prev => ({ ...prev, [slug]: data.products || [] }))
+      fetch(`/api/products?category=${slug}&limit=10`).then(r => r.json()).then(data => {
+        // Sort featured lên đầu
+        const products = (data.products || []).sort((a: Product, b: Product) => {
+          if (a.featured && !b.featured) return -1
+          if (!a.featured && b.featured) return 1
+          return 0
+        })
+        setCategoryProducts(prev => ({ ...prev, [slug]: products }))
       })
     })
   }, [homepageSlugs])

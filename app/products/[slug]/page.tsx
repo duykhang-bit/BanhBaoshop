@@ -223,9 +223,9 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
       {/* Products Grid */}
       <div className="container mx-auto px-6 py-8">
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl h-80 animate-pulse shadow-md" />
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl h-52 animate-pulse shadow-sm" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -238,77 +238,52 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
             <p className="text-2xl text-gray-500">Không tìm thấy sản phẩm nào</p>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             <AnimatePresence>
               {filtered.map((product, index) => (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ delay: index * 0.07 }}
-                  whileHover={{ y: -8 }}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden group"
+                  transition={{ delay: index * 0.03 }}
+                  whileHover={{ y: -4 }}
                 >
                   <Link href={`/product/${product.id}`}>
-                    <div className="relative overflow-hidden h-52">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        unoptimized
-                      />
-                      {product.featured && (
-                        <span className="absolute top-3 left-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs px-3 py-1 rounded-full font-bold">
-                          ⭐ Nổi bật
-                        </span>
-                      )}
-                      {product.stock < 10 && (
-                        <span className="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                          Còn {product.stock}
-                        </span>
-                      )}
+                    <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 group">
+                      <div className="relative aspect-square overflow-hidden bg-gray-50">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {product.featured && (
+                          <span className="absolute top-1 left-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
+                            Nổi bật
+                          </span>
+                        )}
+                        {product.stock < 10 && product.stock > 0 && (
+                          <span className="absolute top-1 right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                            Còn {product.stock}
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-2">
+                        <p className="text-xs font-medium text-gray-800 line-clamp-2 leading-tight mb-1">{product.name}</p>
+                        <p className={`text-sm font-bold bg-gradient-to-r ${info.gradient} bg-clip-text text-transparent mb-1.5`}>
+                          {product.price.toLocaleString('vi-VN')}₫
+                        </p>
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          onClick={(e) => { e.preventDefault(); handleAddToCart(product) }}
+                          className={`w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r ${info.gradient}`}
+                        >
+                          {addedId === product.id ? '✓ Đã thêm' : <><ShoppingCart size={10} /> MUA</>}
+                        </motion.button>
+                      </div>
                     </div>
                   </Link>
-
-                  <div className="p-4">
-                    <Link href={`/product/${product.id}`}>
-                      <h3 className="font-bold text-gray-800 mb-1 line-clamp-2 hover:text-pink-600 transition-colors leading-tight">
-                        {product.name}
-                      </h3>
-                    </Link>
-                    <p className="text-gray-500 text-sm mb-3 line-clamp-2">{product.description}</p>
-
-                    <div className="flex items-center gap-1 mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={12} className="fill-yellow-400 text-yellow-400" />
-                      ))}
-                      <span className="text-xs text-gray-400 ml-1">(5.0)</span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <span className={`text-xl font-bold bg-gradient-to-r ${info.gradient} bg-clip-text text-transparent`}>
-                        {product.price.toLocaleString('vi-VN')}₫
-                      </span>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => handleAddToCart(product)}
-                        className={`p-2 rounded-full bg-gradient-to-r ${info.gradient} text-white shadow-md relative overflow-hidden`}
-                      >
-                        {addedId === product.id ? (
-                          <motion.span
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="text-sm px-1"
-                          >✓</motion.span>
-                        ) : (
-                          <ShoppingCart size={18} />
-                        )}
-                      </motion.button>
-                    </div>
-                  </div>
                 </motion.div>
               ))}
             </AnimatePresence>
