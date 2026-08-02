@@ -242,8 +242,8 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-purple-600 to-pink-600 text-white p-6 shadow-2xl">
+      {/* Sidebar - chỉ hiện trên desktop */}
+      <div className="hidden md:fixed md:flex md:flex-col left-0 top-0 h-full w-64 bg-gradient-to-b from-purple-600 to-pink-600 text-white p-6 shadow-2xl z-10">
         <div className="mb-8">
           <div className="text-4xl mb-2">👑</div>
           <h2 className="text-2xl font-bold">Admin Panel</h2>
@@ -282,8 +282,19 @@ export default function AdminDashboard() {
         </button>
       </div>
 
+      {/* Mobile Top Bar */}
+      <div className="md:hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">👑</span>
+          <span className="font-bold">Admin Panel</span>
+        </div>
+        <button onClick={handleLogout} className="p-2 rounded-xl bg-white/20">
+          <LogOut size={18} />
+        </button>
+      </div>
+
       {/* Main Content */}
-      <div className="ml-64 p-8">
+      <div className="md:ml-64 p-4 md:p-8 pb-24 md:pb-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Quản Lý Sản Phẩm</h1>
@@ -291,7 +302,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <motion.div whileHover={{ y: -5 }} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
             <Package size={32} className="mb-3 opacity-80" />
             <p className="text-3xl font-bold mb-1">{stats.total}</p>
@@ -614,6 +625,28 @@ export default function AdminDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Mobile Bottom Nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-20">
+        <div className="grid grid-cols-4 h-16">
+          <button className="flex flex-col items-center justify-center gap-1 text-purple-600 bg-purple-50">
+            <Package size={20} />
+            <span className="text-xs font-medium">Sản phẩm</span>
+          </button>
+          <Link href="/admin/orders" className="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-pink-600">
+            <ShoppingBag size={20} />
+            <span className="text-xs">Đơn hàng</span>
+          </Link>
+          <Link href="/admin/config" className="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-pink-600">
+            <Settings size={20} />
+            <span className="text-xs">Cấu hình</span>
+          </Link>
+          <button onClick={handleLogout} className="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-red-500">
+            <LogOut size={20} />
+            <span className="text-xs">Đăng xuất</span>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
