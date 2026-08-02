@@ -81,7 +81,7 @@ export default function HomePage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    if (search.trim()) window.location.href = `/products/my-pham?search=${encodeURIComponent(search)}`
+    if (search.trim()) window.location.href = `/search?q=${encodeURIComponent(search.trim())}`
   }
 
   const getCategoryBySlug = (slug: string) => allCategories.find(c => c.slug === slug)

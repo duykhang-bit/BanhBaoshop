@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
     const limit = searchParams.get('limit')
+    const search = searchParams.get('search')
 
     const where: any = {}
 
@@ -16,6 +17,13 @@ export async function GET(request: NextRequest) {
     }
 
     if (featured === 'true') where.featured = true
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search } },
+        { description: { contains: search } },
+      ]
+    }
 
     const products = await prisma.product.findMany({
       where,
