@@ -126,7 +126,7 @@ export default function HomePage() {
                 </button>
               </Link>
               <Link href="/admin/login">
-                <button className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold">
+                <button className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md">
                   <User size={14} /> Admin
                 </button>
               </Link>
