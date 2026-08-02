@@ -7,7 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   LayoutDashboard, Package, Plus, Edit, Trash2, LogOut,
-  Search, X, Check, Upload, DollarSign, Box, Star, TrendingUp, ShoppingBag, Settings
+  Search, X, Check, Upload, DollarSign, Box, Star, TrendingUp, ShoppingBag, Settings, Menu
 } from 'lucide-react'
 
 interface Product {
@@ -47,6 +47,7 @@ export default function AdminDashboard() {
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [revenueStats, setRevenueStats] = useState({ total: 0, revenue: 0 })
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -242,59 +243,52 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Sidebar - chỉ hiện trên desktop */}
-      <div className="hidden md:fixed md:flex md:flex-col left-0 top-0 h-full w-64 bg-gradient-to-b from-purple-600 to-pink-600 text-white p-6 shadow-2xl z-10">
-        <div className="mb-8">
-          <div className="text-4xl mb-2">👑</div>
-          <h2 className="text-2xl font-bold">Admin Panel</h2>
-          <p className="text-sm text-white/70">BanhBao Shop</p>
+      {/* Sidebar - desktop cố định, mobile toggle */}
+      <div className={`fixed left-0 top-0 h-full bg-gradient-to-b from-purple-600 to-pink-600 text-white shadow-2xl z-20 transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-0 overflow-hidden'}`}>
+        <div className="p-5 w-60">
+          <div className="mb-8">
+            <div className="text-3xl mb-1">👑</div>
+            <h2 className="text-xl font-bold">Admin Panel</h2>
+            <p className="text-sm text-white/70">BanhBao Shop</p>
+          </div>
+          <nav className="space-y-1">
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/20 text-sm">
+              <LayoutDashboard size={18} /><span>Dashboard</span>
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
+              <Package size={18} /><span>Sản Phẩm</span>
+            </button>
+            <Link href="/admin/orders">
+              <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
+                <ShoppingBag size={18} /><span>Đơn Hàng</span>
+              </button>
+            </Link>
+            <Link href="/admin/config">
+              <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
+                <Settings size={18} /><span>Cấu Hình</span>
+              </button>
+            </Link>
+          </nav>
+          <button onClick={handleLogout}
+            className="absolute bottom-5 left-5 right-5 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-sm">
+            <LogOut size={18} /><span>Đăng Xuất</span>
+          </button>
         </div>
-
-        <nav className="space-y-2">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
-            <LayoutDashboard size={20} />
-            <span>Dashboard</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors">
-            <Package size={20} />
-            <span>Sản Phẩm</span>
-          </button>
-          <Link href="/admin/orders">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors">
-              <ShoppingBag size={20} />
-              <span>Đơn Hàng</span>
-            </button>
-          </Link>
-          <Link href="/admin/config">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors">
-              <Settings size={20} />
-              <span>Cấu Hình</span>
-            </button>
-          </Link>
-        </nav>
-
-        <button
-          onClick={handleLogout}
-          className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/20 hover:bg-red-500/30 transition-colors"
-        >
-          <LogOut size={20} />
-          <span>Đăng Xuất</span>
-        </button>
       </div>
 
-      {/* Mobile Top Bar */}
-      <div className="md:hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">👑</span>
-          <span className="font-bold">Admin Panel</span>
-        </div>
-        <button onClick={handleLogout} className="p-2 rounded-xl bg-white/20">
-          <LogOut size={18} />
-        </button>
-      </div>
+      {/* Toggle sidebar button - luôn hiện */}
+      <button onClick={() => setSidebarOpen(!sidebarOpen)}
+        className={`fixed top-4 z-30 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-r-xl p-2 shadow-lg transition-all duration-300 ${sidebarOpen ? 'left-60' : 'left-0'}`}>
+        {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+      </button>
+
+      {/* Overlay khi sidebar mở trên mobile */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/30 z-10 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
 
       {/* Main Content */}
-      <div className="md:ml-64 p-4 md:p-8 pb-24 md:pb-8">
+      <div className={`transition-all duration-300 p-4 md:p-8 pb-24 md:pb-8 ${sidebarOpen ? 'md:ml-60' : 'ml-0'}`}>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Quản Lý Sản Phẩm</h1>

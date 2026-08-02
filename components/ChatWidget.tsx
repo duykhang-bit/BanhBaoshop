@@ -1,8 +1,9 @@
 'use client'
+'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Phone, User, CheckCircle } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { motion, AnimatePresence, useDragControls } from 'framer-motion'
+import { MessageCircle, X, Send, Phone, User } from 'lucide-react'
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
@@ -10,6 +11,7 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', message: '' })
   const [error, setError] = useState('')
+  const dragControls = useDragControls()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,7 +49,13 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <motion.div
+      drag
+      dragControls={dragControls}
+      dragMomentum={false}
+      dragElastic={0}
+      className="fixed bottom-6 right-6 z-50 touch-none"
+    >
       <AnimatePresence>
         {open && (
           <motion.div
@@ -144,12 +152,13 @@ export default function ChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Toggle button */}
+      {/* Toggle button - giữ để kéo, tap để mở */}
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
+        onPointerDown={(e) => dragControls.start(e)}
         onClick={() => setOpen(!open)}
-        className="w-14 h-14 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white relative"
+        className="w-14 h-14 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white relative cursor-grab active:cursor-grabbing"
       >
         <AnimatePresence mode="wait">
           {open ? (
@@ -169,6 +178,6 @@ export default function ChatWidget() {
           </span>
         )}
       </motion.button>
-    </div>
+    </motion.div>
   )
 }
