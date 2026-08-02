@@ -302,19 +302,17 @@ export default function HomePage() {
                             </div>
                             <div className="p-2">
                               <p className="text-xs font-medium text-gray-800 line-clamp-2 leading-tight mb-1">{product.name}</p>
-                              <div className="flex items-center justify-between gap-1">
-                                <p className={`text-sm font-bold bg-gradient-to-r ${info.from} bg-clip-text text-transparent`}>
-                                  {product.price.toLocaleString('vi-VN')}₫
-                                </p>
-                                <motion.button
-                                  whileTap={{ scale: 0.9 }}
-                                  onClick={(e) => handleAddToCart(product, e)}
-                                  disabled={product.stock === 0}
-                                  className={`flex items-center gap-0.5 px-2 py-1 rounded-lg text-xs font-bold text-white shadow-sm disabled:opacity-40 bg-gradient-to-r ${info.from} flex-shrink-0`}
-                                >
-                                  {addedId === product.id ? '✓' : <><Plus size={10} /> MUA</>}
-                                </motion.button>
-                              </div>
+                              <p className={`text-sm font-bold bg-gradient-to-r ${info.from} bg-clip-text text-transparent mb-1.5`}>
+                                {product.price.toLocaleString('vi-VN')}₫
+                              </p>
+                              <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => handleAddToCart(product, e)}
+                                disabled={product.stock === 0}
+                                className={`w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm disabled:opacity-40 bg-gradient-to-r ${info.from}`}
+                              >
+                                {addedId === product.id ? '✓ Đã thêm' : <><Plus size={10} /> MUA</>}
+                              </motion.button>
                             </div>
                           </div>
                         </Link>
