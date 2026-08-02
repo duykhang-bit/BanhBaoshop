@@ -67,6 +67,7 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
   const [sortBy, setSortBy] = useState('newest')
   const { addItem, items } = useCartStore()
   const [addedId, setAddedId] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ name: string } | null>(null)
 
   const info = categoryInfo[slug] || {
     label: 'Sản Phẩm',
@@ -110,7 +111,9 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
       quantity: 1,
     })
     setAddedId(product.id)
+    setToast({ name: product.name })
     setTimeout(() => setAddedId(null), 1500)
+    setTimeout(() => setToast(null), 2500)
   }
 
   const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0)
@@ -303,6 +306,27 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
           </motion.button>
         </Link>
       </div>
+
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 60, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 60, scale: 0.9 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-xs w-full mx-4"
+          >
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm">✓</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-gray-400">Đã thêm vào giỏ hàng</p>
+              <p className="text-sm font-semibold truncate">{toast.name}</p>
+            </div>
+            <Link href="/cart" onClick={() => setToast(null)} className="text-xs text-pink-400 font-bold flex-shrink-0">
+              Xem giỏ →
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
