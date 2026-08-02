@@ -110,6 +110,7 @@ export default function AdminDashboard() {
         name: '',
         description: '',
         price: '',
+        originalPrice: '',
         image: '',
         categoryId: categories[0]?.id || '',
         stock: '0',
