@@ -115,7 +115,7 @@ export default function MyOrdersPage() {
         {/* Search */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3">
             <div className="flex-1 flex items-center gap-3 border-2 border-gray-200 focus-within:border-pink-400 rounded-xl px-4 py-3 transition-colors">
               <Phone size={20} className="text-gray-400 flex-shrink-0" />
               <input
@@ -129,7 +129,7 @@ export default function MyOrdersPage() {
             </div>
             <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               onClick={handleSearch} disabled={loading || !phone.trim()}
-              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold shadow-md disabled:opacity-50 flex items-center gap-2">
+              className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold shadow-md disabled:opacity-50 flex items-center justify-center gap-2">
               <Search size={18} />
               {loading ? 'Đang tìm...' : 'Tìm'}
             </motion.button>
