@@ -86,3 +86,30 @@ model UsedPromo {
 
   @@unique([code, customerPhone])
 }
+
+model User {
+  id        String   @id @default(uuid())
+  phone     String   @unique
+  password  String
+  name      String   @default("")
+  address   String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VisitorLog {
+  id        String   @id @default(uuid())
+  ip        String   @default("")
+  userAgent String   @default("")
+  path      String   @default("/")
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetRequest {
+  id        String   @id @default(uuid())
+  phone     String
+  userName  String   @default("")
+  status    String   @default("pending") // pending, done
+  newPassword String @default("")
+  createdAt DateTime @default(now())
+}

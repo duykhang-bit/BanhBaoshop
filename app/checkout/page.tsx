@@ -8,11 +8,13 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, CreditCard, Wallet, User, Phone, MapPin, FileText, Tag, CheckCircle } from 'lucide-react'
 import { useCartStore } from '@/lib/cartStore'
 import { useShopConfig } from '@/lib/useShopConfig'
+import { useUserStore } from '@/lib/userStore'
 
 export default function CheckoutPage() {
   const router = useRouter()
   const { items, getTotalPrice, clearCart, appliedPromo } = useCartStore()
   const { calcShipping, config } = useShopConfig()
+  const { user, token } = useUserStore()
   const [loading, setLoading] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [orderId, setOrderId] = useState('')
@@ -31,6 +33,18 @@ export default function CheckoutPage() {
     note: '',
     paymentMethod: 'cod',
   })
+
+  // Auto-fill từ tài khoản nếu đã đăng nhập
+  useEffect(() => {
+    if (user && token) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: prev.customerName || user.name || '',
+        customerPhone: prev.customerPhone || user.phone || '',
+        customerAddress: prev.customerAddress || user.address || '',
+      }))
+    }
+  }, [user, token])
 
   const totalPrice = getTotalPrice()
   const shippingFee = calcShipping(totalPrice)

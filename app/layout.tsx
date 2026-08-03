@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import ChatWidget from '@/components/ChatWidget'
+import VisitorTracker from '@/components/VisitorTracker'
 
 export const metadata: Metadata = {
   title: 'BanhBao Shop - Mỹ Phẩm, Phân Bón, Công Nghệ, Tôm Giống',
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body>
         {children}
         <ChatWidget />
+        <VisitorTracker />
       </body>
     </html>
   )

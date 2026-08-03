@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ShoppingCart, User, ShoppingBag, Search, ChevronRight, Menu, X, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useCartStore } from '@/lib/cartStore'
+import { useUserStore } from '@/lib/userStore'
 import Image from 'next/image'
 
 interface Product {
@@ -41,6 +42,7 @@ export default function HomePage() {
   const [toast, setToast] = useState<{ name: string } | null>(null)
   const [hiddenNavItems, setHiddenNavItems] = useState<string[]>([])
   const { items, addItem } = useCartStore()
+  const { user, token } = useUserStore()
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
 
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
@@ -131,11 +133,19 @@ export default function HomePage() {
                   )}
                 </button>
               </Link>
-              <Link href="/admin/login">
-                <button className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md">
-                  <User size={14} /> Admin
-                </button>
-              </Link>
+              {token ? (
+                <Link href="/account">
+                  <button className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md">
+                    <User size={14} /> {user?.name || 'Tài khoản'}
+                  </button>
+                </Link>
+              ) : (
+                <Link href="/account/login">
+                  <button className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md">
+                    <User size={14} /> Đăng nhập
+                  </button>
+                </Link>
+              )}
               <button onClick={() => setShowMenu(!showMenu)} className="sm:hidden p-2 rounded-full hover:bg-gray-100">
                 {showMenu ? <X size={22} /> : <Menu size={22} />}
               </button>

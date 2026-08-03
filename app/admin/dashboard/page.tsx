@@ -7,7 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   LayoutDashboard, Package, Plus, Edit, Trash2, LogOut,
-  Search, X, Check, Upload, DollarSign, Box, Star, TrendingUp, ShoppingBag, Settings, Menu
+  Search, X, Check, Upload, DollarSign, Box, Star, TrendingUp, ShoppingBag, Settings, Menu, Users, Eye, Bell
 } from 'lucide-react'
 
 interface Product {
@@ -49,6 +49,7 @@ export default function AdminDashboard() {
   const [uploadError, setUploadError] = useState('')
   const [revenueStats, setRevenueStats] = useState({ total: 0, revenue: 0 })
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [siteStats, setSiteStats] = useState<any>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -62,16 +63,19 @@ export default function AdminDashboard() {
 
   const fetchData = async (token: string) => {
     try {
-      const [productsRes, categoriesRes, ordersRes] = await Promise.all([
+      const [productsRes, categoriesRes, ordersRes, statsRes] = await Promise.all([
         fetch('/api/admin/products', { headers: { Authorization: `Bearer ${token}` } }),
         fetch('/api/admin/categories', { headers: { Authorization: `Bearer ${token}` } }),
         fetch('/api/admin/orders', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } }),
       ])
       const productsData = await productsRes.json()
       const categoriesData = await categoriesRes.json()
       const ordersData = await ordersRes.json()
+      const statsData = await statsRes.json()
       setProducts(productsData.products || [])
       setCategories(categoriesData.categories || [])
+      setSiteStats(statsData)
       // Store orders count for revenue
       const orders = ordersData.orders || []
       const revenue = orders
@@ -266,6 +270,14 @@ export default function AdminDashboard() {
                 <ShoppingBag size={18} /><span>Đơn Hàng</span>
               </button>
             </Link>
+            <Link href="/admin/customers">
+              <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm relative">
+                <Users size={18} /><span>Khách Hàng</span>
+                {siteStats?.pendingResets > 0 && (
+                  <span className="absolute right-3 top-2 w-2 h-2 bg-red-400 rounded-full animate-ping" />
+                )}
+              </button>
+            </Link>
             <Link href="/admin/config">
               <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
                 <Settings size={18} /><span>Cấu Hình</span>
@@ -328,6 +340,47 @@ export default function AdminDashboard() {
             <p className="text-orange-100 text-sm">Sắp Hết Hàng</p>
           </motion.div>
         </div>
+
+        {/* Visitor & User Stats */}
+        {siteStats && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Eye size={18} className="text-cyan-500" />
+                <span className="text-xs text-gray-500 font-medium">Lượt truy cập hôm nay</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-800">{siteStats.visitors?.today || 0}</p>
+              <p className="text-xs text-gray-400 mt-1">{siteStats.visitors?.uniqueToday || 0} khách unique</p>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Eye size={18} className="text-blue-500" />
+                <span className="text-xs text-gray-500 font-medium">7 ngày qua</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-800">{siteStats.visitors?.week || 0}</p>
+              <p className="text-xs text-gray-400 mt-1">{siteStats.visitors?.uniqueWeek || 0} khách unique</p>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Users size={18} className="text-green-500" />
+                <span className="text-xs text-gray-500 font-medium">Tài khoản</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-800">{siteStats.users?.total || 0}</p>
+              <p className="text-xs text-gray-400 mt-1">+{siteStats.users?.week || 0} tuần này</p>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Eye size={18} className="text-purple-500" />
+                <span className="text-xs text-gray-500 font-medium">Tổng lượt truy cập</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-800">{siteStats.visitors?.total || 0}</p>
+              <p className="text-xs text-gray-400 mt-1">Tháng này: {siteStats.visitors?.month || 0}</p>
+            </motion.div>
+          </div>
+        )}
 
         {/* Search & Add */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -636,7 +689,7 @@ export default function AdminDashboard() {
 
       {/* Mobile Bottom Nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-20">
-        <div className="grid grid-cols-4 h-16">
+        <div className="grid grid-cols-5 h-16">
           <button className="flex flex-col items-center justify-center gap-1 text-purple-600 bg-purple-50">
             <Package size={20} />
             <span className="text-xs font-medium">Sản phẩm</span>
@@ -644,6 +697,13 @@ export default function AdminDashboard() {
           <Link href="/admin/orders" className="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-pink-600">
             <ShoppingBag size={20} />
             <span className="text-xs">Đơn hàng</span>
+          </Link>
+          <Link href="/admin/customers" className="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-pink-600 relative">
+            <Users size={20} />
+            <span className="text-xs">Khách hàng</span>
+            {siteStats?.pendingResets > 0 && (
+              <span className="absolute top-2 right-3 w-2 h-2 bg-red-500 rounded-full" />
+            )}
           </Link>
           <Link href="/admin/config" className="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-pink-600">
             <Settings size={20} />
