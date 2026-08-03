@@ -193,8 +193,8 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* Hero Banner - auto slide gradient + pháo hoa */}
-      <section className="relative overflow-hidden py-8 px-6">
+      {/* Hero Banner - KHAI TRƯƠNG + pháo hoa */}
+      <section className="relative overflow-hidden py-10 px-6">
         {/* Animated gradient backgrounds */}
         <motion.div
           animate={{ background: [
@@ -211,33 +211,86 @@ export default function HomePage() {
             className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
           <motion.div animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity }}
             className="absolute -bottom-10 -left-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
-          {/* Pháo hoa */}
-          {['🎆', '🎇', '✨', '🎉', '🎊', '✨', '🎆', '🎇'].map((emoji, i) => (
-            <motion.span key={i} className="absolute text-2xl select-none"
-              style={{ left: `${5 + i * 12}%`, top: `${10 + (i % 3) * 30}%` }}
-              animate={{ y: [-5, 5, -5], opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.4 }}>
+
+          {/* Pháo hoa bay - nhiều hơn và đẹp hơn cho khai trương */}
+          {['🎆', '🎇', '✨', '🎉', '🎊', '💥', '🌟', '⭐', '🎆', '🎇', '✨', '🎉', '🎊', '🌟'].map((emoji, i) => (
+            <motion.span key={`fw-${i}`} className="absolute text-xl md:text-3xl select-none"
+              style={{ left: `${3 + i * 7}%`, top: `${5 + (i % 4) * 25}%` }}
+              animate={{
+                y: [-10, 10, -10],
+                x: [-5, 5, -5],
+                opacity: [0.2, 1, 0.2],
+                scale: [0.6, 1.3, 0.6],
+                rotate: [0, 15, -15, 0],
+              }}
+              transition={{ duration: 1.5 + i * 0.2, repeat: Infinity, delay: i * 0.3 }}>
               {emoji}
             </motion.span>
           ))}
+
+          {/* Hiệu ứng tia sáng bắn ra */}
+          {Array.from({ length: 8 }).map((_, i) => (
+            <motion.div key={`spark-${i}`}
+              className="absolute w-1 h-1 bg-yellow-300 rounded-full"
+              style={{ left: `${10 + i * 11}%`, top: `${20 + (i % 3) * 25}%` }}
+              animate={{
+                scale: [0, 2, 0],
+                opacity: [0, 1, 0],
+                y: [-20, 20],
+              }}
+              transition={{ duration: 1.2 + i * 0.15, repeat: Infinity, delay: i * 0.5 }}
+            />
+          ))}
+
+          {/* Confetti rơi */}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <motion.div key={`confetti-${i}`}
+              className="absolute w-2 h-2 rounded-sm"
+              style={{
+                left: `${5 + i * 8}%`,
+                top: '-5%',
+                backgroundColor: ['#ec4899', '#8b5cf6', '#f59e0b', '#10b981', '#3b82f6', '#ef4444'][i % 6],
+              }}
+              animate={{
+                y: ['0%', '800%'],
+                x: [0, (i % 2 === 0 ? 30 : -30)],
+                rotate: [0, 360],
+                opacity: [1, 0.8, 0],
+              }}
+              transition={{ duration: 3 + i * 0.3, repeat: Infinity, delay: i * 0.4, ease: 'easeIn' }}
+            />
+          ))}
         </div>
+
         <div className="max-w-6xl mx-auto flex items-center justify-between relative z-10">
           <div>
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block mb-2"
+            >
+              <span className="bg-yellow-400 text-red-600 px-3 py-1 rounded-full text-xs md:text-sm font-black tracking-wide shadow-lg">
+                🎊 GRAND OPENING 🎊
+              </span>
+            </motion.div>
             <motion.h1 initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-              className="text-2xl md:text-3xl font-bold text-white mb-2">
-              Chào mừng ghé thăm <span className="text-yellow-300">BanhBao Shop</span> 🛍️
+              className="text-2xl md:text-4xl font-bold text-white mb-2">
+              🎉 Khai Trương <span className="text-yellow-300">BanhBao Shop</span> 🛍️
             </motion.h1>
             <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}
-              className="text-white/80 text-sm md:text-base">
-              Hàng chất, giá tốt, giao nhanh toàn quốc
+              className="text-white/90 text-sm md:text-base">
+              Hàng chất, giá tốt, giao nhanh toàn quốc 🚀
             </motion.p>
           </div>
           <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
             className="hidden md:flex gap-3">
             <Link href="/products/my-pham">
-              <button className="bg-white text-purple-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-shadow">
-                Mua ngay →
-              </button>
+              <motion.button
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="bg-white text-purple-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-shadow">
+                🛒 Mua ngay →
+              </motion.button>
             </Link>
             <Link href="/cart">
               <button className="bg-white/20 backdrop-blur-sm text-white px-5 py-2.5 rounded-xl font-semibold text-sm border border-white/30 hover:bg-white/30 transition-colors">

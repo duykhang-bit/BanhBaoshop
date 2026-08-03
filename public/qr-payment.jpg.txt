@@ -1,0 +1,7 @@
+Placeholder for QR code image
+Please replace this with actual QR code image at:
+BanhBaoshop/public/qr-payment.jpg
+
+LE DUY KHANG
+TPBank
+STK: 00004775170
