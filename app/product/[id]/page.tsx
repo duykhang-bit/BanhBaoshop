@@ -184,7 +184,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <span className="text-gray-500 text-sm">(127 đánh giá)</span>
               </div>
 
               <div className="mb-6">
