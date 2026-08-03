@@ -101,33 +101,33 @@ export default function HomePage() {
       <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4">
           {/* Top row */}
-          <div className="flex items-center gap-3 py-3">
+          <div className="flex items-center gap-2 py-3">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <span className="text-2xl">🛍️</span>
+            <Link href="/" className="flex items-center gap-1 flex-shrink-0">
+              <span className="text-xl sm:text-2xl">🛍️</span>
               <span className="text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent hidden sm:block">
                 BanhBao Shop
               </span>
             </Link>
 
             {/* Search */}
-            <form onSubmit={handleSearch} className="flex-1 flex items-center gap-2 bg-gray-100 rounded-xl px-4 py-2.5 max-w-xl mx-auto">
-              <Search size={18} className="text-gray-400 flex-shrink-0" />
+            <form onSubmit={handleSearch} className="flex-1 flex items-center gap-1 bg-gray-100 rounded-xl px-2 sm:px-4 py-2 sm:py-2.5 min-w-0">
+              <Search size={16} className="text-gray-400 flex-shrink-0" />
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="Tìm kiếm sản phẩm..."
-                className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400" />
-              <button type="submit" className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                placeholder="Tìm sản phẩm..."
+                className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400 min-w-0" />
+              <button type="submit" className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-semibold flex-shrink-0">
                 Tìm
               </button>
             </form>
 
             {/* Actions */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <Link href="/cart">
-                <button className="relative p-2 rounded-full hover:bg-gray-100">
-                  <ShoppingCart size={22} className="text-gray-700" />
+                <button className="relative p-1.5 sm:p-2 rounded-full hover:bg-gray-100">
+                  <ShoppingCart size={20} className="text-gray-700" />
                   {totalItems > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold text-[10px] sm:text-xs">
                       {totalItems}
                     </span>
                   )}
@@ -135,19 +135,19 @@ export default function HomePage() {
               </Link>
               {token ? (
                 <Link href="/account">
-                  <button className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md">
-                    <User size={14} /> {user?.name || 'Tài khoản'}
+                  <button className="flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md whitespace-nowrap">
+                    <User size={12} /> <span className="hidden sm:inline">{user?.name || 'Tài khoản'}</span><span className="sm:hidden">TK</span>
                   </button>
                 </Link>
               ) : (
                 <Link href="/account/login">
-                  <button className="flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md">
-                    <User size={14} /> Đăng nhập
+                  <button className="flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md whitespace-nowrap">
+                    <User size={12} /> <span className="hidden sm:inline">Đăng nhập</span><span className="sm:hidden">Login</span>
                   </button>
                 </Link>
               )}
-              <button onClick={() => setShowMenu(!showMenu)} className="sm:hidden p-2 rounded-full hover:bg-gray-100">
-                {showMenu ? <X size={22} /> : <Menu size={22} />}
+              <button onClick={() => setShowMenu(!showMenu)} className="sm:hidden p-1.5 rounded-full hover:bg-gray-100">
+                {showMenu ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
           </div>
