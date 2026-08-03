@@ -193,7 +193,7 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* Hero Banner - auto slide gradient */}
+      {/* Hero Banner - auto slide gradient + pháo hoa */}
       <section className="relative overflow-hidden py-8 px-6">
         {/* Animated gradient backgrounds */}
         <motion.div
@@ -211,6 +211,15 @@ export default function HomePage() {
             className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
           <motion.div animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity }}
             className="absolute -bottom-10 -left-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+          {/* Pháo hoa */}
+          {['🎆', '🎇', '✨', '🎉', '🎊', '✨', '🎆', '🎇'].map((emoji, i) => (
+            <motion.span key={i} className="absolute text-2xl select-none"
+              style={{ left: `${5 + i * 12}%`, top: `${10 + (i % 3) * 30}%` }}
+              animate={{ y: [-5, 5, -5], opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
+              transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.4 }}>
+              {emoji}
+            </motion.span>
+          ))}
         </div>
         <div className="max-w-6xl mx-auto flex items-center justify-between relative z-10">
           <div>
