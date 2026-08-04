@@ -29,6 +29,7 @@ model Product {
   description   String
   price         Float
   originalPrice Float    @default(0)
+  costPrice     Float    @default(0)
   image         String
   categoryId    String
   category      Category @relation(fields: [categoryId], references: [id])
@@ -113,4 +114,12 @@ model PasswordResetRequest {
   status    String   @default("pending") // pending, done
   newPassword String @default("")
   createdAt DateTime @default(now())
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  type        String   // "restock" (nhập hàng), "shipping", "packaging", "other"
+  description String
+  amount      Float
+  createdAt   DateTime @default(now())
 }

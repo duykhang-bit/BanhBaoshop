@@ -40,6 +40,7 @@ export default function AdminDashboard() {
     description: '',
     price: '',
     originalPrice: '',
+    costPrice: '',
     image: '',
     categoryId: '',
     stock: '',
@@ -103,6 +104,7 @@ export default function AdminDashboard() {
         description: product.description,
         price: product.price.toString(),
         originalPrice: (product as any).originalPrice?.toString() || '',
+        costPrice: (product as any).costPrice?.toString() || '',
         image: product.image,
         categoryId: product.category.id,
         stock: product.stock.toString(),
@@ -115,6 +117,7 @@ export default function AdminDashboard() {
         description: '',
         price: '',
         originalPrice: '',
+        costPrice: '',
         image: '',
         categoryId: categories[0]?.id || '',
         stock: '0',
@@ -276,6 +279,11 @@ export default function AdminDashboard() {
                 {siteStats?.pendingResets > 0 && (
                   <span className="absolute right-3 top-2 w-2 h-2 bg-red-400 rounded-full animate-ping" />
                 )}
+              </button>
+            </Link>
+            <Link href="/admin/finance">
+              <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
+                <TrendingUp size={18} /><span>Tài Chính</span>
               </button>
             </Link>
             <Link href="/admin/config">
@@ -560,6 +568,17 @@ export default function AdminDashboard() {
                       type="number"
                       value={formData.originalPrice}
                       onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Giá vốn (₫) <span className="text-xs text-gray-400">— giá nhập hàng</span></label>
+                    <input
+                      type="number"
+                      value={formData.costPrice}
+                      onChange={(e) => setFormData({ ...formData, costPrice: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
                       placeholder="0"
                     />

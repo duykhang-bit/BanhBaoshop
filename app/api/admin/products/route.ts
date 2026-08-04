@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { name, description, price, originalPrice, image, categoryId, stock, featured } = body
+    const { name, description, price, originalPrice, costPrice, image, categoryId, stock, featured } = body
 
     if (!name || !description || !price || !image || !categoryId) {
       return NextResponse.json({ error: 'Vui lòng điền đầy đủ thông tin' }, { status: 400 })
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
         description,
         price: parseFloat(price),
         originalPrice: parseFloat(originalPrice) || 0,
+        costPrice: parseFloat(costPrice) || 0,
         image,
         categoryId,
         stock: parseInt(stock) || 0,
