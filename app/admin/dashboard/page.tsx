@@ -286,6 +286,11 @@ export default function AdminDashboard() {
                 <TrendingUp size={18} /><span>Tài Chính</span>
               </button>
             </Link>
+            <Link href="/admin/chat">
+              <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
+                <Bell size={18} /><span>Chat</span>
+              </button>
+            </Link>
             <Link href="/admin/config">
               <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 text-sm">
                 <Settings size={18} /><span>Cấu Hình</span>

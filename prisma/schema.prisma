@@ -124,3 +124,22 @@ model Expense {
   amount      Float
   createdAt   DateTime @default(now())
 }
+
+model ChatConversation {
+  id        String        @id @default(uuid())
+  guestName String        @default("")
+  guestPhone String       @default("")
+  status    String        @default("active") // active, closed
+  messages  ChatMessage[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model ChatMessage {
+  id             String           @id @default(uuid())
+  conversationId String
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         String           // "guest" or "admin"
+  text           String
+  createdAt      DateTime         @default(now())
+}
