@@ -347,10 +347,10 @@ export default function AdminDashboard() {
             <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
               <div className="flex items-center gap-2 mb-2">
                 <Eye size={18} className="text-cyan-500" />
-                <span className="text-xs text-gray-500 font-medium">Lượt truy cập hôm nay</span>
+                <span className="text-xs text-gray-500 font-medium">Truy cập hôm nay</span>
               </div>
               <p className="text-2xl font-bold text-gray-800">{siteStats.visitors?.today || 0}</p>
-              <p className="text-xs text-gray-400 mt-1">{siteStats.visitors?.uniqueToday || 0} khách unique</p>
+              <p className="text-xs text-gray-400 mt-1">thiết bị</p>
             </motion.div>
 
             <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
@@ -359,7 +359,7 @@ export default function AdminDashboard() {
                 <span className="text-xs text-gray-500 font-medium">7 ngày qua</span>
               </div>
               <p className="text-2xl font-bold text-gray-800">{siteStats.visitors?.week || 0}</p>
-              <p className="text-xs text-gray-400 mt-1">{siteStats.visitors?.uniqueWeek || 0} khách unique</p>
+              <p className="text-xs text-gray-400 mt-1">thiết bị</p>
             </motion.div>
 
             <motion.div whileHover={{ y: -5 }} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
