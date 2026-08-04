@@ -21,6 +21,19 @@ export async function POST(request: NextRequest) {
         },
       })
       convId = conv.id
+    } else {
+      // Kiểm tra conversation còn tồn tại không
+      const existing = await prisma.chatConversation.findUnique({ where: { id: convId } })
+      if (!existing) {
+        // Conversation đã bị xóa → tạo mới
+        const conv = await prisma.chatConversation.create({
+          data: {
+            guestName: guestName || '',
+            guestPhone: guestPhone || '',
+          },
+        })
+        convId = conv.id
+      }
     }
 
     // Lưu tin nhắn
