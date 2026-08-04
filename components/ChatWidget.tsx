@@ -1,183 +1,37 @@
 'use client'
-'use client'
 
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence, useDragControls } from 'framer-motion'
-import { MessageCircle, X, Send, Phone, User } from 'lucide-react'
+import Script from 'next/script'
 
 export default function ChatWidget() {
-  const [open, setOpen] = useState(false)
-  const [sent, setSent] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '', message: '' })
-  const [error, setError] = useState('')
-  const dragControls = useDragControls()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!form.phone || !form.message) {
-      setError('Vui lòng nhập số điện thoại và tin nhắn')
-      return
-    }
-    setLoading(true)
-    setError('')
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      })
-      if (res.ok) {
-        setSent(true)
-      } else {
-        setError('Gửi thất bại, thử lại sau')
-      }
-    } catch {
-      setError('Lỗi kết nối, thử lại sau')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-    setTimeout(() => {
-      setSent(false)
-      setForm({ name: '', phone: '', message: '' })
-      setError('')
-    }, 300)
-  }
-
   return (
-    <motion.div
-      drag
-      dragControls={dragControls}
-      dragMomentum={false}
-      dragElastic={0}
-      className="fixed bottom-6 right-6 z-50 touch-none"
-    >
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="absolute bottom-16 right-0 w-80 bg-white rounded-3xl shadow-2xl overflow-hidden border border-pink-100"
-          >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-pink-500 to-purple-600 px-5 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl">
-                  🛍️
-                </div>
-                <div>
-                  <p className="text-white font-bold text-sm">BanhBao Shop</p>
-                  <p className="text-white/80 text-xs">Tư vấn miễn phí</p>
-                </div>
-              </div>
-              <button onClick={handleClose} className="text-white/80 hover:text-white transition-colors">
-                <X size={20} />
-              </button>
-            </div>
+    <>
+      {/* Tawk.to Live Chat */}
+      <Script id="tawk-to" strategy="lazyOnload">
+        {`
+          var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+          (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/6a71e30ffb30501d470ea917/1jv6dttjg';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+          })();
+        `}
+      </Script>
 
-            {/* Body */}
-            <div className="p-5">
-              {!sent ? (
-                <>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Để lại số điện thoại, shop sẽ liên hệ tư vấn cho bạn sớm nhất! 💬
-                  </p>
-                  <form onSubmit={handleSubmit} className="space-y-3">
-                    <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 focus-within:border-pink-400 transition-colors">
-                      <User size={16} className="text-gray-400 flex-shrink-0" />
-                      <input
-                        type="text"
-                        placeholder="Tên của bạn (tùy chọn)"
-                        value={form.name}
-                        onChange={e => setForm({ ...form, name: e.target.value })}
-                        className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400"
-                      />
-                    </div>
-                    <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 focus-within:border-pink-400 transition-colors">
-                      <Phone size={16} className="text-gray-400 flex-shrink-0" />
-                      <input
-                        type="tel"
-                        required
-                        placeholder="Số điện thoại *"
-                        value={form.phone}
-                        onChange={e => setForm({ ...form, phone: e.target.value })}
-                        className="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400"
-                      />
-                    </div>
-                    <div className="border border-gray-200 rounded-xl px-3 py-2 focus-within:border-pink-400 transition-colors">
-                      <textarea
-                        required
-                        rows={3}
-                        placeholder="Bạn cần tư vấn gì? *"
-                        value={form.message}
-                        onChange={e => setForm({ ...form, message: e.target.value })}
-                        className="w-full outline-none text-sm text-gray-700 placeholder-gray-400 resize-none"
-                      />
-                    </div>
-                    {error && <p className="text-red-500 text-xs">⚠️ {error}</p>}
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      type="submit"
-                      disabled={loading}
-                      className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold text-sm shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
-                    >
-                      <Send size={16} />
-                      {loading ? 'Đang gửi...' : 'Gửi tin nhắn'}
-                    </motion.button>
-                  </form>
-                </>
-              ) : (
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-4">
-                  <div className="text-5xl mb-3">✅</div>
-                  <p className="font-bold text-green-600 text-lg mb-1">Gửi thành công!</p>
-                  <p className="text-gray-500 text-sm mb-4">
-                    Shop sẽ liên hệ với bạn qua số <strong className="text-pink-600">{form.phone}</strong> sớm nhất có thể!
-                  </p>
-                  <button onClick={handleClose}
-                    className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-sm font-semibold">
-                    Đóng
-                  </button>
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Toggle button - giữ để kéo, tap để mở */}
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onPointerDown={(e) => dragControls.start(e)}
-        onClick={() => setOpen(!open)}
-        className="w-14 h-14 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white relative cursor-grab active:cursor-grabbing"
+      {/* Nút Chat Zalo */}
+      <a
+        href="https://zalo.me/0389839161"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg transition-colors"
       >
-        <AnimatePresence mode="wait">
-          {open ? (
-            <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
-              <X size={24} />
-            </motion.div>
-          ) : (
-            <motion.div key="chat" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-              <MessageCircle size={24} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        {/* Ping animation */}
-        {!open && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white">
-            <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75" />
-          </span>
-        )}
-      </motion.button>
-    </motion.div>
+        <svg width="20" height="20" viewBox="0 0 48 48" fill="white">
+          <path d="M24 0C10.745 0 0 10.745 0 24s10.745 24 24 24 24-10.745 24-24S37.255 0 24 0zm11.2 31.6c-.4.8-2.4 1.6-3.2 1.6-.8 0-1.6-.4-4.4-1.6-3.2-1.6-5.2-4-6-4.8-.8-.8-2.4-3.2-2.4-5.2s1.2-3.2 1.6-3.6c.4-.4 1.2-.8 1.6-.8s.8 0 1.2.4c.4.4 1.2 2.8 1.2 3.2.4.4.4 1.2 0 1.6-.4.4-.8 1.2-1.2 1.2-.4.4-.4.8 0 1.2.8 1.2 2 2.4 3.2 3.2 1.2.8 2.4 1.2 2.8.8.4-.4 1.2-1.2 1.6-1.6.4-.4.8-.4 1.2 0l2.8 2c.4.4.8.4 1.2.8 0 .4 0 1.6-.4 2.4z"/>
+        </svg>
+        <span className="text-sm font-semibold hidden sm:inline">Chat Zalo</span>
+      </a>
+    </>
   )
 }
