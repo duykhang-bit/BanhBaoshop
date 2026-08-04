@@ -9,6 +9,7 @@ import { ArrowLeft, CreditCard, Wallet, User, Phone, MapPin, FileText, Tag, Chec
 import { useCartStore } from '@/lib/cartStore'
 import { useShopConfig } from '@/lib/useShopConfig'
 import { useUserStore } from '@/lib/userStore'
+import AddressSelector from '@/components/AddressSelector'
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -200,11 +201,10 @@ export default function CheckoutPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <span className="flex items-center gap-2"><MapPin size={18} /> Địa chỉ giao hàng *</span>
               </label>
-              <textarea required rows={3} value={formData.customerAddress}
-                onChange={(e) => setFormData({ ...formData, customerAddress: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
-                placeholder="Số nhà, đường, ấp/khu phố, xã/phường, huyện/quận, tỉnh/thành phố" />
-              <p className="text-xs text-gray-400 mt-1">⚠️ Ghi đầy đủ để shipper giao đúng (VD: 55 Lê Đức Thọ, P.6, Q.Gò Vấp, TP.HCM)</p>
+              <AddressSelector
+                value={formData.customerAddress}
+                onChange={(addr) => setFormData({ ...formData, customerAddress: addr })}
+              />
             </div>
 
             <div>
