@@ -66,16 +66,17 @@ model OrderItem {
 }
 
 model ShopConfig {
-  id                  String  @id @default("singleton")
-  shippingFee         Float   @default(30000)
-  freeShippingMin     Float   @default(300000)
-  shippingEnabled     Boolean @default(true)
-  showShippingHint    Boolean @default(true)
-  shippingByAddress   Boolean @default(false)
-  promoEnabled        Boolean @default(false)
-  promoCodes          String  @default("[]")
-  homepageCategories  String  @default("[]")
-  hiddenNavItems      String  @default("[]")
+  id                       String  @id @default("singleton")
+  shippingFee              Float   @default(30000)
+  freeShippingMin          Float   @default(300000)
+  shippingEnabled          Boolean @default(true)
+  showShippingHint         Boolean @default(true)
+  shippingByAddress        Boolean @default(false)
+  manualShippingCategories String  @default("[\"phan-bon\",\"tom-giong\"]")
+  promoEnabled             Boolean @default(false)
+  promoCodes               String  @default("[]")
+  homepageCategories       String  @default("[]")
+  hiddenNavItems           String  @default("[]")
 }
 
 model UsedPromo {

@@ -20,6 +20,7 @@ interface Config {
   shippingEnabled: boolean
   showShippingHint: boolean
   shippingByAddress: boolean
+  manualShippingCategories: string[]
   promoEnabled: boolean
   promoCodes: PromoCode[]
   homepageCategories: string[]
@@ -43,7 +44,7 @@ export default function AdminConfigPage() {
   const router = useRouter()
   const [config, setConfig] = useState<Config>({
     shippingFee: 30000, freeShippingMin: 300000, shippingEnabled: true,
-    showShippingHint: true, shippingByAddress: false, promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [],
+    showShippingHint: true, shippingByAddress: false, manualShippingCategories: ['phan-bon', 'tom-giong'], promoEnabled: false, promoCodes: [], homepageCategories: [], hiddenNavItems: [],
   })
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -71,6 +72,7 @@ export default function AdminConfigPage() {
           homepageCategories: configData.homepageCategories ?? [],
           hiddenNavItems: configData.hiddenNavItems ?? [],
           shippingByAddress: configData.shippingByAddress ?? false,
+          manualShippingCategories: configData.manualShippingCategories ?? ['phan-bon', 'tom-giong'],
         })
       }
       setCategories(catData.categories || [])
@@ -272,6 +274,36 @@ export default function AdminConfigPage() {
             <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-xl border border-yellow-200">
               <p className="text-sm font-semibold text-gray-700">Hiện gợi ý "Mua thêm X để miễn phí ship"</p>
               <Toggle value={config.showShippingHint} onChange={() => setConfig(p => ({ ...p, showShippingHint: !p.showShippingHint }))} />
+            </div>
+
+            {/* Danh mục "Shop báo phí sau" */}
+            <div className="mt-4 p-3 bg-purple-50 rounded-xl border border-purple-200">
+              <p className="text-sm font-semibold text-gray-700 mb-1">📦 Danh mục "Shop sẽ báo phí ship"</p>
+              <p className="text-xs text-gray-500 mb-3">Đơn có sản phẩm thuộc danh mục này sẽ không tự tính phí, hiện "Shop sẽ báo khi xác nhận đơn"</p>
+              <div className="flex flex-wrap gap-2">
+                {categories.map(cat => {
+                  const isSelected = (config.manualShippingCategories || []).includes(cat.slug)
+                  return (
+                    <button key={cat.id} type="button"
+                      onClick={() => {
+                        setConfig(p => ({
+                          ...p,
+                          manualShippingCategories: isSelected
+                            ? p.manualShippingCategories.filter(s => s !== cat.slug)
+                            : [...p.manualShippingCategories, cat.slug]
+                        }))
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                        isSelected
+                          ? 'bg-purple-500 text-white border-purple-500'
+                          : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300'
+                      }`}
+                    >
+                      {cat.name} {isSelected ? '✓' : ''}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           </div>
         </motion.div>

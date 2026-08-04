@@ -14,12 +14,10 @@ export interface ShopConfig {
   shippingEnabled: boolean
   showShippingHint: boolean
   shippingByAddress: boolean
+  manualShippingCategories: string[]
   promoEnabled: boolean
   promoCodes: PromoCode[]
 }
-
-// Danh mục "shop báo phí sau" (phân bón, tôm giống - nặng/giao gần)
-const MANUAL_SHIPPING_CATEGORIES = ['phan-bon', 'tom-giong']
 
 const defaultConfig: ShopConfig = {
   shippingFee: 30000,
@@ -27,6 +25,7 @@ const defaultConfig: ShopConfig = {
   shippingEnabled: true,
   showShippingHint: true,
   shippingByAddress: false,
+  manualShippingCategories: ['phan-bon', 'tom-giong'],
   promoEnabled: false,
   promoCodes: [],
 }
@@ -45,7 +44,7 @@ export function useShopConfig() {
 
   // Check xem giỏ hàng có sản phẩm thuộc danh mục "shop báo sau" không
   const hasManualShippingItem = (categorySlugs: (string | undefined)[]): boolean => {
-    return categorySlugs.some(slug => slug && MANUAL_SHIPPING_CATEGORIES.includes(slug))
+    return categorySlugs.some(slug => slug && config.manualShippingCategories.includes(slug))
   }
 
   const calcShipping = (subtotal: number, categorySlugs?: (string | undefined)[]): number => {
