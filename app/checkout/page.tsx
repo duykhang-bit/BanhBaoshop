@@ -203,7 +203,8 @@ export default function CheckoutPage() {
               <textarea required rows={3} value={formData.customerAddress}
                 onChange={(e) => setFormData({ ...formData, customerAddress: e.target.value })}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300"
-                placeholder="123 Đường ABC, Quận 1, TP.HCM" />
+                placeholder="Số nhà, đường, ấp/khu phố, xã/phường, huyện/quận, tỉnh/thành phố" />
+              <p className="text-xs text-gray-400 mt-1">⚠️ Ghi đầy đủ để shipper giao đúng (VD: 55 Lê Đức Thọ, P.6, Q.Gò Vấp, TP.HCM)</p>
             </div>
 
             <div>
