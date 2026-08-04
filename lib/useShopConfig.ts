@@ -42,6 +42,7 @@ export function useShopConfig() {
 
   const calcShipping = (subtotal: number): number => {
     if (!config.shippingEnabled) return 0
+    if (config.shippingByAddress) return 0 // Shop sẽ báo phí sau, không tự cộng
     return subtotal >= config.freeShippingMin ? 0 : config.shippingFee
   }
 
