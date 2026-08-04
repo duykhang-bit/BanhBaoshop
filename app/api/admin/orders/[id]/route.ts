@@ -14,11 +14,15 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json()
-    const { status } = body
+    const { status, adminNote } = body
+
+    const updateData: any = {}
+    if (status !== undefined) updateData.status = status
+    if (adminNote !== undefined) updateData.adminNote = adminNote
 
     const order = await prisma.order.update({
       where: { id },
-      data: { status },
+      data: updateData,
       include: { items: true }
     })
 

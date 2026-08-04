@@ -220,9 +220,32 @@ export default function AdminOrdersPage() {
 
                 {order.note && (
                   <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-gray-700"><strong>Ghi chú:</strong> {order.note}</p>
+                    <p className="text-sm text-gray-700"><strong>📝 Ghi chú khách:</strong> {order.note}</p>
                   </div>
                 )}
+
+                {/* Admin note */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      defaultValue={(order as any).adminNote || ''}
+                      placeholder="📌 Ghi chú nội bộ (VD: đã ship, thiếu hàng...)"
+                      onBlur={(e) => {
+                        const val = e.target.value
+                        if (val !== ((order as any).adminNote || '')) {
+                          const token = localStorage.getItem('admin_token')
+                          fetch(`/api/admin/orders/${order.id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                            body: JSON.stringify({ adminNote: val }),
+                          })
+                        }
+                      }}
+                      className="flex-1 px-3 py-2 text-sm border border-dashed border-gray-300 rounded-lg focus:outline-none focus:border-purple-400 bg-purple-50/50 placeholder-gray-400"
+                    />
+                  </div>
+                </div>
 
                 {/* Items */}
                 <div className="space-y-1 mb-4">

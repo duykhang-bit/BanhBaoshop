@@ -45,6 +45,7 @@ model Order {
   customerPhone   String
   customerAddress String
   note            String      @default("")
+  adminNote       String      @default("")
   paymentMethod   String      // "cod" or "bank"
   status          String      @default("pending") // pending, confirmed, shipping, completed, cancelled
   totalAmount     Float
