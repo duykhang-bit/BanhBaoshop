@@ -18,6 +18,9 @@ export interface ShopConfig {
   promoCodes: PromoCode[]
 }
 
+// Danh mục "shop báo phí sau" (phân bón, tôm giống - nặng/giao gần)
+const MANUAL_SHIPPING_CATEGORIES = ['phan-bon', 'tom-giong']
+
 const defaultConfig: ShopConfig = {
   shippingFee: 30000,
   freeShippingMin: 300000,
@@ -40,10 +43,26 @@ export function useShopConfig() {
       .finally(() => setLoading(false))
   }, [])
 
-  const calcShipping = (subtotal: number): number => {
+  // Check xem giỏ hàng có sản phẩm thuộc danh mục "shop báo sau" không
+  const hasManualShippingItem = (categorySlugs: (string | undefined)[]): boolean => {
+    return categorySlugs.some(slug => slug && MANUAL_SHIPPING_CATEGORIES.includes(slug))
+  }
+
+  const calcShipping = (subtotal: number, categorySlugs?: (string | undefined)[]): number => {
     if (!config.shippingEnabled) return 0
-    if (config.shippingByAddress) return 0 // Shop sẽ báo phí sau, không tự cộng
+    // Nếu giỏ có phân bón/tôm giống → shop báo sau, không cộng phí
+    if (categorySlugs && hasManualShippingItem(categorySlugs)) return 0
+    // Nếu config chung là "tính theo địa chỉ" → không cộng
+    if (config.shippingByAddress) return 0
+    // Tính phí bình thường (mỹ phẩm, công nghệ)
     return subtotal >= config.freeShippingMin ? 0 : config.shippingFee
+  }
+
+  // Xác định kiểu hiển thị phí ship
+  const getShippingType = (categorySlugs?: (string | undefined)[]): 'auto' | 'manual' => {
+    if (categorySlugs && hasManualShippingItem(categorySlugs)) return 'manual'
+    if (config.shippingByAddress) return 'manual'
+    return 'auto'
   }
 
   const applyPromo = (code: string, subtotal: number): { discount: number; error: string } => {
@@ -57,5 +76,5 @@ export function useShopConfig() {
     return { discount, error: '' }
   }
 
-  return { config, loading, calcShipping, applyPromo }
+  return { config, loading, calcShipping, getShippingType, applyPromo }
 }

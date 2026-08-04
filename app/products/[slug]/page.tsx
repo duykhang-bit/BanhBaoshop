@@ -109,6 +109,7 @@ export default function ProductsPage({ params }: { params: Promise<{ slug: strin
       price: product.price,
       image: product.image,
       quantity: 1,
+      categorySlug: product.category?.slug,
     })
     setAddedId(product.id)
     setToast({ name: product.name })

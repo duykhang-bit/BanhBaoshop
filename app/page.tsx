@@ -46,10 +46,10 @@ export default function HomePage() {
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
   const isLoggedIn = mounted && !!token
 
-  const handleAddToCart = (product: Product, e: React.MouseEvent) => {
+  const handleAddToCart = (product: Product, e: React.MouseEvent, categorySlug?: string) => {
     e.preventDefault()
     e.stopPropagation()
-    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 })
+    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1, categorySlug })
     setAddedId(product.id)
     setToast({ name: product.name })
     setTimeout(() => setAddedId(null), 1500)
@@ -407,7 +407,7 @@ export default function HomePage() {
                               </div>
                               <motion.button
                                 whileTap={{ scale: 0.9 }}
-                                onClick={(e) => handleAddToCart(product, e)}
+                                onClick={(e) => handleAddToCart(product, e, slug)}
                                 disabled={product.stock === 0}
                                 className={`w-full flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm disabled:opacity-40 bg-gradient-to-r ${info.from}`}
                               >

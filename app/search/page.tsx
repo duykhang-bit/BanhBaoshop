@@ -51,7 +51,7 @@ function SearchContent() {
 
   const handleAdd = (product: Product, e: React.MouseEvent) => {
     e.preventDefault()
-    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 })
+    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1, categorySlug: product.category?.slug })
     setAddedId(product.id)
     setTimeout(() => setAddedId(null), 1500)
   }

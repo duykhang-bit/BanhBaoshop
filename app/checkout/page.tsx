@@ -13,7 +13,7 @@ import { useUserStore } from '@/lib/userStore'
 export default function CheckoutPage() {
   const router = useRouter()
   const { items, getTotalPrice, clearCart, appliedPromo } = useCartStore()
-  const { calcShipping, config } = useShopConfig()
+  const { calcShipping, getShippingType, config } = useShopConfig()
   const { user, token } = useUserStore()
   const [loading, setLoading] = useState(false)
   const [showQR, setShowQR] = useState(false)
@@ -47,7 +47,9 @@ export default function CheckoutPage() {
   }, [user, token])
 
   const totalPrice = getTotalPrice()
-  const shippingFee = calcShipping(totalPrice)
+  const categorySlugs = items.map(i => i.categorySlug)
+  const shippingType = getShippingType(categorySlugs)
+  const shippingFee = calcShipping(totalPrice, categorySlugs)
   const discount = appliedPromo?.discount || 0
   const finalTotal = totalPrice + shippingFee - discount
 
@@ -254,7 +256,7 @@ export default function CheckoutPage() {
               <div className="flex justify-between">
                 <span className="text-gray-600">Phí vận chuyển</span>
                 <span className="font-semibold">
-                  {config.shippingByAddress ? (
+                  {shippingType === 'manual' ? (
                     <span className="text-orange-500 text-sm">Shop sẽ báo khi xác nhận đơn</span>
                   ) : shippingFee === 0 ? (
                     <span className="text-green-600">Miễn phí</span>
@@ -263,7 +265,7 @@ export default function CheckoutPage() {
                   )}
                 </span>
               </div>
-              {config.shippingByAddress && (
+              {shippingType === 'manual' && (
                 <div className="text-xs text-gray-500 bg-orange-50 p-2 rounded-lg">
                   📦 Nội tỉnh: 15-30k | Ngoại tỉnh: 30-50k (tùy khu vực)
                 </div>

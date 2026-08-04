@@ -45,6 +45,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       price: product.price,
       image: product.image,
       quantity,
+      categorySlug: product.category?.slug,
     })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)

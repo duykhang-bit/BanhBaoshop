@@ -20,6 +20,7 @@ export interface CartItem {
   price: number
   image: string
   quantity: number
+  categorySlug?: string
 }
 
 export interface AppliedPromo {
