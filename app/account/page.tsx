@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { User, Phone, MapPin, Lock, LogOut, Package, Edit2, Check, X, ArrowLeft } from 'lucide-react'
 import { useUserStore } from '@/lib/userStore'
+import AddressSelector from '@/components/AddressSelector'
 
 interface Order {
   id: string
@@ -231,9 +232,10 @@ export default function AccountPage() {
                     <div className="flex-1">
                       <p className="text-xs text-gray-500">Địa chỉ giao hàng mặc định</p>
                       {editing ? (
-                        <textarea value={profileForm.address} onChange={e => setProfileForm({ ...profileForm, address: e.target.value })}
-                          rows={2}
-                          className="w-full mt-1 px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-pink-500 resize-none" />
+                        <AddressSelector
+                          value={profileForm.address}
+                          onChange={(addr) => setProfileForm({ ...profileForm, address: addr })}
+                        />
                       ) : (
                         <p className="font-medium text-gray-800">{user.address || '—'}</p>
                       )}
