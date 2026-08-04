@@ -86,3 +86,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Lỗi gửi tin nhắn' }, { status: 500 })
   }
 }
+
+// DELETE: Xóa conversation
+export async function DELETE(request: NextRequest) {
+  const admin = verifyToken(request)
+  if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  try {
+    const { conversationId } = await request.json()
+    if (!conversationId) return NextResponse.json({ error: 'Thiếu conversationId' }, { status: 400 })
+
+    await prisma.chatConversation.delete({ where: { id: conversationId } })
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    return NextResponse.json({ error: 'Lỗi xóa' }, { status: 500 })
+  }
+}

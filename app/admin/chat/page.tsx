@@ -181,20 +181,38 @@ export default function AdminChatPage() {
           ) : (
             <>
               {/* Chat header */}
-              <div className="bg-white border-b px-4 py-3 flex items-center gap-3">
-                <button onClick={() => setSelectedConv(null)} className="md:hidden text-gray-400">
-                  <ArrowLeft size={20} />
-                </button>
-                <div>
-                  <p className="font-semibold text-sm text-gray-800">
-                    {conversations.find(c => c.id === selectedConv)?.guestName || 'Khách'}
-                  </p>
-                  {conversations.find(c => c.id === selectedConv)?.guestPhone && (
-                    <p className="text-xs text-gray-500 flex items-center gap-1">
-                      <Phone size={10} /> {conversations.find(c => c.id === selectedConv)?.guestPhone}
+              <div className="bg-white border-b px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <button onClick={() => setSelectedConv(null)} className="md:hidden text-gray-400">
+                    <ArrowLeft size={20} />
+                  </button>
+                  <div>
+                    <p className="font-semibold text-sm text-gray-800">
+                      {conversations.find(c => c.id === selectedConv)?.guestName || 'Khách'}
                     </p>
-                  )}
+                    {conversations.find(c => c.id === selectedConv)?.guestPhone && (
+                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                        <Phone size={10} /> {conversations.find(c => c.id === selectedConv)?.guestPhone}
+                      </p>
+                    )}
+                  </div>
                 </div>
+                <button
+                  onClick={async () => {
+                    if (!confirm('Xóa đoạn chat này?')) return
+                    const token = localStorage.getItem('admin_token')
+                    await fetch('/api/admin/chat', {
+                      method: 'DELETE',
+                      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                      body: JSON.stringify({ conversationId: selectedConv }),
+                    })
+                    setSelectedConv(null)
+                    fetchConversations()
+                  }}
+                  className="text-xs text-red-500 hover:text-red-600 font-medium px-2 py-1 rounded-lg hover:bg-red-50"
+                >
+                  🗑️ Xóa chat
+                </button>
               </div>
 
               {/* Messages */}
