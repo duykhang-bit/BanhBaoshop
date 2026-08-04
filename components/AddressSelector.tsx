@@ -41,7 +41,9 @@ export default function AddressSelector({ value, onChange }: AddressSelectorProp
   // Parse existing address value on mount
   useEffect(() => {
     if (value && !selectedProvince && !detail && !manualAddress) {
+      // Nếu có địa chỉ cũ dạng text → chuyển sang manual mode
       setManualAddress(value)
+      setManualMode(true)
     }
   }, [value])
 
