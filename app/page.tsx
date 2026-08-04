@@ -44,6 +44,7 @@ export default function HomePage() {
   const { items, addItem } = useCartStore()
   const { user, token } = useUserStore()
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
+  const isLoggedIn = mounted && !!token
 
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
     e.preventDefault()

@@ -1,5 +1,18 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
+
+// Safe localStorage that won't crash in-app browsers (Zalo, FB, etc.)
+const safeStorage = {
+  getItem: (name: string) => {
+    try { return localStorage.getItem(name) } catch { return null }
+  },
+  setItem: (name: string, value: string) => {
+    try { localStorage.setItem(name, value) } catch {}
+  },
+  removeItem: (name: string) => {
+    try { localStorage.removeItem(name) } catch {}
+  },
+}
 
 export interface CartItem {
   id: string
@@ -84,6 +97,7 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'banhbao-cart-storage',
+      storage: createJSONStorage(() => safeStorage),
     }
   )
 )

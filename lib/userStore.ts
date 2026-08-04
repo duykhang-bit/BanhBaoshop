@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface UserInfo {
   id: string
@@ -15,6 +15,27 @@ interface UserStore {
   updateUser: (user: Partial<UserInfo>) => void
   logout: () => void
   isLoggedIn: () => boolean
+}
+
+// Safe localStorage that won't crash in-app browsers
+const safeStorage = {
+  getItem: (name: string) => {
+    try {
+      return localStorage.getItem(name)
+    } catch {
+      return null
+    }
+  },
+  setItem: (name: string, value: string) => {
+    try {
+      localStorage.setItem(name, value)
+    } catch {}
+  },
+  removeItem: (name: string) => {
+    try {
+      localStorage.removeItem(name)
+    } catch {}
+  },
 }
 
 export const useUserStore = create<UserStore>()(
@@ -38,6 +59,7 @@ export const useUserStore = create<UserStore>()(
     }),
     {
       name: 'banhbao-user-storage',
+      storage: createJSONStorage(() => safeStorage),
     }
   )
 )
